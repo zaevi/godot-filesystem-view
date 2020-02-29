@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/FileSystemView/FileSystemView.gd" type="Script" id=1]
+
+[node name="View" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -736.0
+margin_bottom = -236.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBox" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MenuButton" type="OptionButton" parent="VBox"]
+margin_right = 288.0
+margin_bottom = 20.0
+expand_icon = true
+selected = 0
+
+[node name="Tree" type="Tree" parent="VBox"]
+margin_top = 24.0
+margin_right = 288.0
+margin_bottom = 364.0
+size_flags_vertical = 3
+allow_rmb_select = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="item_selected" from="VBox/MenuButton" to="." method="_on_MenuButton_item_selected"]
+[connection signal="item_activated" from="VBox/Tree" to="." method="_on_Tree_item_activated"]

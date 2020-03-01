@@ -8,31 +8,44 @@ var View = preload("res://addons/FileSystemView/View.gd")
 var agent = preload("EditorAgent.gd").new()
 
 onready var tree : Tree = $VBox/Tree
+onready var option_btn : MenuButton = $VBox/HBox/Option
 
 var views: Array
 var current_view
 
+var config_dialog = null
+
 func _ready():
+	pass
+
+
+func init(plugin: EditorPlugin):
+	agent._set_interface(plugin)
+	
+	$VBox/HBox/Config.icon = get_icon("Tools", "EditorIcons")
+	
 	load_views()
 	update_view_list()
 	
-	$VBox/MenuButton.select(0)
+	option_btn.select(0)
 	_on_MenuButton_item_selected(0)
+
 
 func change_view(view):
 	current_view = view
 	refresh_tree()
 
+
 func update_view_list():
-	var menu = $VBox/MenuButton.get_popup()
+	var menu = option_btn.get_popup()
 	menu.clear()
 	var id = 0
 	for view in views:
 		menu.add_item(view.name, id)
 		if view.icon != "" and has_icon(view.icon, "EditorIcons"):
 			menu.set_item_icon(id, get_icon(view.icon, "EditorIcons"))
-			menu.set_item_metadata(id, view)
 		id += 1
+
 
 func load_views():
 	views = []
@@ -51,6 +64,7 @@ func load_views():
 		view.hide_empty_dirs = config.get_value(i, "hide_empty_dirs", true)
 		views.append(view)
 
+
 func save_views():
 	var config = ConfigFile.new()
 	var i = 0
@@ -65,6 +79,7 @@ func save_views():
 		
 	config.save(PLUGIN_DIR + "views.cfg")
 
+
 func refresh_tree():
 	tree.clear()
 	var fs = agent.filesystem.get_filesystem()
@@ -72,6 +87,7 @@ func refresh_tree():
 	
 	if current_view and current_view.hide_empty_dirs:
 		_clean_empty_dir(tree.get_root())
+
 
 func _clean_empty_dir(current: TreeItem):
 	var should_clean = true
@@ -89,6 +105,7 @@ func _clean_empty_dir(current: TreeItem):
 		item = item.get_next()
 		
 	return should_clean
+
 
 func _create_tree(parent: TreeItem, current: EditorFileSystemDirectory):
 	var item = tree.create_item(parent)
@@ -121,6 +138,7 @@ func _create_tree(parent: TreeItem, current: EditorFileSystemDirectory):
 		
 		file_item.set_metadata(0, file_path)
 
+
 func _get_tree_item_icon(dir: EditorFileSystemDirectory, idx: int) -> Texture:
 	var icon : Texture
 	if not dir.get_file_import_is_valid(idx):
@@ -133,12 +151,19 @@ func _get_tree_item_icon(dir: EditorFileSystemDirectory, idx: int) -> Texture:
 			icon = get_icon("File", "EditorIcons")
 	return icon
 
+
+func _exit_tree():
+	if config_dialog:
+		config_dialog.queue_free()
+
+
 func _on_MenuButton_item_selected(id):
 	if id >= 0:
 		var view = views[id]
 		change_view(view)
 	else:
 		change_view(null)
+
 
 func _on_Tree_item_activated():
 	var item = tree.get_selected()
@@ -147,3 +172,30 @@ func _on_Tree_item_activated():
 		item.collapsed = not item.collapsed
 	else:
 		agent.open_file(path)
+
+
+func _on_ConfigBtn_pressed():
+	if not config_dialog:
+		config_dialog = preload("ViewEditor.tscn").instance()
+		agent.interface.get_base_control().add_child(config_dialog)
+		config_dialog.init()
+		config_dialog.connect("popup_hide", self, "_on_ViewEditor_closed")
+		config_dialog.views = views
+		config_dialog.update_view_list()
+	
+	config_dialog.load_view(option_btn.selected)
+	config_dialog.popup_centered()
+
+
+func _on_ViewEditor_closed():
+	config_dialog.save_current()
+	save_views()
+	update_view_list()
+	
+	if current_view in views:
+		var id = views.find(current_view)
+		option_btn.select(id)
+		change_view(current_view)
+	else:
+		option_btn.select(0)
+		change_view(views[0])

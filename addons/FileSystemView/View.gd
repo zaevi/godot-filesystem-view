@@ -18,9 +18,13 @@ func _set_exclude(value):
 	_excludes = _split_patterns(value)
 
 func _split_patterns(pattern: String):
+	var patterns = []
 	if pattern == "":
-		return []
-	var patterns = pattern.split(";", false)
+		return patterns
+	for p in pattern.split(";", false):
+		if not p.begins_with("res://"):
+			p = "res://" + p
+		patterns.append(p)
 	return patterns
 
 func _any_match(patterns: Array, path: String) -> bool:

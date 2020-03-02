@@ -23,6 +23,8 @@ func init(plugin: EditorPlugin):
 	agent._set_interface(plugin)
 	
 	$VBox/HBox/Config.icon = get_icon("Tools", "EditorIcons")
+	$VBox/HBox2/Unfold.icon = get_icon("AnimationTrackGroup", "EditorIcons")
+	$VBox/HBox2/Collapse.icon = get_icon("AnimationTrackList", "EditorIcons")
 	
 	load_views()
 	update_view_list()
@@ -199,3 +201,34 @@ func _on_ViewEditor_closed():
 	else:
 		option_btn.select(0)
 		change_view(views[0])
+
+
+func _set_folder_collapsed(current:TreeItem, collapsed:bool, excepts = null):
+	var item: TreeItem = current.get_children()
+	
+	while item:
+		var path : String = item.get_metadata(0)
+		if path.ends_with("/"):
+			_set_folder_collapsed(item, collapsed, excepts)
+			if excepts and path in excepts:
+				item.collapsed = not collapsed
+			else:
+				item.collapsed = collapsed
+		item = item.get_next()
+
+
+func _on_Unfold_pressed():
+	var root = tree.get_root()
+	_set_folder_collapsed(root, false)
+
+
+func _on_Collapse_pressed():
+	var root = tree.get_root()
+	_set_folder_collapsed(root, true)
+
+
+func _on_Locate_pressed():
+	pass # Replace with function body.
+
+
+

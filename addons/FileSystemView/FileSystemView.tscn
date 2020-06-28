@@ -20,35 +20,35 @@ __meta__ = {
 }
 
 [node name="HBox" type="HBoxContainer" parent="VBox"]
-margin_right = 288.0
-margin_bottom = 20.0
+margin_right = 1184.0
+margin_bottom = 42.0
 
 [node name="Option" type="OptionButton" parent="VBox/HBox"]
-margin_right = 272.0
-margin_bottom = 20.0
+margin_right = 1168.0
+margin_bottom = 42.0
 size_flags_horizontal = 3
 clip_text = true
 expand_icon = true
 
 [node name="Config" type="Button" parent="VBox/HBox"]
-margin_left = 276.0
-margin_right = 288.0
-margin_bottom = 20.0
+margin_left = 1172.0
+margin_right = 1184.0
+margin_bottom = 42.0
 
 [node name="HBox2" type="HBoxContainer" parent="VBox"]
-margin_top = 24.0
-margin_right = 288.0
-margin_bottom = 44.0
+margin_top = 46.0
+margin_right = 1184.0
+margin_bottom = 88.0
 
 [node name="Collapse" type="Button" parent="VBox/HBox2"]
 margin_right = 12.0
-margin_bottom = 20.0
+margin_bottom = 42.0
 hint_tooltip = "Collapse All"
 
 [node name="Unfold" type="Button" parent="VBox/HBox2"]
 margin_left = 16.0
 margin_right = 28.0
-margin_bottom = 20.0
+margin_bottom = 42.0
 hint_tooltip = "Unfold All"
 
 [node name="VSeparator" type="VSeparator" parent="VBox/HBox2"]
@@ -64,11 +64,12 @@ margin_right = 44.0
 margin_bottom = 20.0
 
 [node name="Tree" type="Tree" parent="VBox"]
-margin_top = 48.0
-margin_right = 288.0
-margin_bottom = 364.0
+margin_top = 92.0
+margin_right = 1184.0
+margin_bottom = 844.0
 size_flags_vertical = 3
 allow_rmb_select = true
+select_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -78,3 +79,4 @@ __meta__ = {
 [connection signal="pressed" from="VBox/HBox2/Unfold" to="." method="_on_Unfold_pressed"]
 [connection signal="pressed" from="VBox/HBox2/Locate" to="." method="_on_Locate_pressed"]
 [connection signal="item_activated" from="VBox/Tree" to="." method="_on_Tree_item_activated"]
+[connection signal="item_rmb_selected" from="VBox/Tree" to="." method="_on_Tree_item_rmb_selected"]

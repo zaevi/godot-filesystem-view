@@ -8,7 +8,7 @@ var View = preload("res://addons/FileSystemView/View.gd")
 var agent = preload("EditorAgent.gd").new()
 
 onready var tree : Tree = $VBox/Tree
-onready var option_btn : MenuButton = $VBox/HBox/Option
+onready var option_btn : OptionButton = $VBox/HBox/Option
 
 var views: Array
 var current_view
@@ -231,4 +231,8 @@ func _on_Locate_pressed():
 	pass # Replace with function body.
 
 
-
+func _on_Tree_item_rmb_selected(position):
+	var path = tree.get_selected().get_metadata(0)
+	agent.select_item(path)
+	agent.tree.emit_signal("item_rmb_selected", position)
+	pass # Replace with function body.

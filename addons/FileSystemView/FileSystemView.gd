@@ -31,6 +31,8 @@ func init(plugin: EditorPlugin):
 	
 	option_btn.select(0)
 	_on_MenuButton_item_selected(0)
+	
+	agent.filesystem.connect("filesystem_changed", self, "refresh_tree")
 
 
 func change_view(view):

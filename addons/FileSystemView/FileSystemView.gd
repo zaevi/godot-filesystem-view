@@ -26,6 +26,7 @@ func init(plugin: EditorPlugin):
 	$VBox/HBox2/Unfold.icon = get_icon("AnimationTrackGroup", "EditorIcons")
 	$VBox/HBox2/Collapse.icon = get_icon("AnimationTrackList", "EditorIcons")
 	
+	current_view = View.new()
 	load_views()
 	update_view_list()
 	
@@ -33,10 +34,22 @@ func init(plugin: EditorPlugin):
 	_on_MenuButton_item_selected(0)
 	
 	agent.filesystem.connect("filesystem_changed", self, "refresh_tree")
+	
+	
 
 
 func change_view(view):
-	current_view = view
+#	current_view = view
+	current_view.name = view.name
+	current_view.icon = view.icon
+	current_view.include = view.include
+	current_view.exclude = view.exclude
+	current_view.hide_empty_dirs = view.hide_empty_dirs
+	current_view.apply_include = view.apply_include
+	current_view.apply_exclude = view.apply_exclude
+	$VBox/HBox2/ShowEmpty.pressed = view.hide_empty_dirs
+	$VBox/HBox2/ApplyInclude.pressed = view.apply_include
+	$VBox/HBox2/ApplyExclude.pressed = view.apply_exclude
 	refresh_tree()
 
 
@@ -63,6 +76,8 @@ func load_views():
 		var view = View.new()
 		view.name = config.get_value(i, "name", "")
 		view.icon = config.get_value(i, "icon", "")
+		view.apply_include = config.get_value(i, "apply_include", true)
+		view.apply_exclude = config.get_value(i, "apply_exclude", false)
 		view.include = config.get_value(i, "include", "")
 		view.exclude = config.get_value(i, "exclude", "")
 		view.hide_empty_dirs = config.get_value(i, "hide_empty_dirs", true)
@@ -76,7 +91,9 @@ func save_views():
 		var istr = str(i)
 		config.set_value(istr, "name", view.name)
 		config.set_value(istr, "icon", view.icon)
+		config.set_value(istr, "apply_include", view.apply_include)
 		config.set_value(istr, "include", view.include)
+		config.set_value(istr, "apply_exclude", view.apply_exclude)
 		config.set_value(istr, "exclude", view.exclude)
 		config.set_value(istr, "hide_empty_dirs", view.hide_empty_dirs)
 		i += 1
@@ -238,3 +255,19 @@ func _on_Tree_item_rmb_selected(position):
 	agent.select_item(path)
 	agent.tree.emit_signal("item_rmb_selected", position)
 	pass # Replace with function body.
+
+
+func _on_ApplyInclude_toggled(button_pressed):
+	current_view.apply_include = button_pressed
+	refresh_tree()
+
+
+func _on_ApplyExclude_toggled(button_pressed):
+	current_view.apply_exclude = button_pressed
+	refresh_tree()
+
+
+func _on_ShowEmpty_toggled(button_pressed):
+	current_view.hide_empty_dirs = button_pressed
+	refresh_tree()
+

@@ -5,6 +5,8 @@ var icon : String = ""
 var include: String = "" setget _set_include
 var exclude: String = "" setget _set_exclude
 var hide_empty_dirs: bool = true
+var apply_include: bool = true
+var apply_exclude: bool
 
 var _includes = []
 var _excludes = []
@@ -34,8 +36,8 @@ func _any_match(patterns: Array, path: String) -> bool:
 	return false
 
 func is_match(path: String) -> bool:
-	if _includes.size() > 0 and not _any_match(_includes, path):
+	if apply_include and _includes.size() > 0 and not _any_match(_includes, path):
 		return false
-	if _excludes.size() > 0 and _any_match(_excludes, path):
+	if apply_exclude and _excludes.size() > 0 and _any_match(_excludes, path):
 		return false
 	return true

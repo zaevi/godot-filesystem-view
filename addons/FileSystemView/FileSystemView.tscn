@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/FileSystemView/FileSystemView.gd" type="Script" id=1]
+[ext_resource path="res://addons/FileSystemView/icons/folder_empty.svg" type="Texture" id=2]
+[ext_resource path="res://addons/FileSystemView/icons/filter_include.svg" type="Texture" id=3]
+[ext_resource path="res://addons/FileSystemView/icons/filter_exclude.svg" type="Texture" id=4]
 
 [node name="View" type="Control"]
 anchor_right = 1.0
@@ -55,13 +58,44 @@ hint_tooltip = "Unfold All"
 visible = false
 margin_left = 32.0
 margin_right = 36.0
-margin_bottom = 20.0
+margin_bottom = 42.0
 
 [node name="Locate" type="Button" parent="VBox/HBox2"]
 visible = false
 margin_left = 32.0
 margin_right = 44.0
-margin_bottom = 20.0
+margin_bottom = 42.0
+
+[node name="VSeparator2" type="VSeparator" parent="VBox/HBox2"]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 32.0
+margin_right = 1088.0
+margin_bottom = 42.0
+size_flags_horizontal = 3
+
+[node name="ApplyInclude" type="Button" parent="VBox/HBox2"]
+margin_left = 1092.0
+margin_right = 1120.0
+margin_bottom = 42.0
+hint_tooltip = "Apply Include"
+toggle_mode = true
+icon = ExtResource( 3 )
+
+[node name="ApplyExclude" type="Button" parent="VBox/HBox2"]
+margin_left = 1124.0
+margin_right = 1152.0
+margin_bottom = 42.0
+hint_tooltip = "Apply Exclude"
+toggle_mode = true
+icon = ExtResource( 4 )
+
+[node name="ShowEmpty" type="Button" parent="VBox/HBox2"]
+margin_left = 1156.0
+margin_right = 1184.0
+margin_bottom = 42.0
+hint_tooltip = "Show Empty Folder"
+toggle_mode = true
+icon = ExtResource( 2 )
 
 [node name="Tree" type="Tree" parent="VBox"]
 margin_top = 92.0
@@ -69,7 +103,6 @@ margin_right = 1184.0
 margin_bottom = 844.0
 size_flags_vertical = 3
 allow_rmb_select = true
-select_mode = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -78,5 +111,8 @@ __meta__ = {
 [connection signal="pressed" from="VBox/HBox2/Collapse" to="." method="_on_Collapse_pressed"]
 [connection signal="pressed" from="VBox/HBox2/Unfold" to="." method="_on_Unfold_pressed"]
 [connection signal="pressed" from="VBox/HBox2/Locate" to="." method="_on_Locate_pressed"]
+[connection signal="toggled" from="VBox/HBox2/ApplyInclude" to="." method="_on_ApplyInclude_toggled"]
+[connection signal="toggled" from="VBox/HBox2/ApplyExclude" to="." method="_on_ApplyExclude_toggled"]
+[connection signal="toggled" from="VBox/HBox2/ShowEmpty" to="." method="_on_ShowEmpty_toggled"]
 [connection signal="item_activated" from="VBox/Tree" to="." method="_on_Tree_item_activated"]
 [connection signal="item_rmb_selected" from="VBox/Tree" to="." method="_on_Tree_item_rmb_selected"]

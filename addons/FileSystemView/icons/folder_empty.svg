@@ -1,0 +1,15 @@
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="2.99999" height="2.99999" id="canvas_background" fill="none"/>
+ </g>
+ <defs>
+  <filter height="200%" width="200%" y="-50%" x="-50%" id="svg_1_blur">
+   <feGaussianBlur stdDeviation="0" in="SourceGraphic"/>
+  </filter>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <path stroke-width="2" stroke="#e5e5e5" filter="url(#svg_1_blur)" stroke-dasharray="5,2,2,2,2,2" d="m2.333333,2.333333a0.944444,0.944444 0 0 0 -0.944444,0.944444l0,1.888889l0,5.666667l0,1.888889a0.944444,0.944444 0 0 0 0.944444,0.944444l11.333334,0a0.944444,0.944444 0 0 0 0.944444,-0.944444l0,-6.611111a0.944444,0.944444 0 0 0 -0.944444,-0.944444l-3.777778,0a0.944444,0.944444 0 0 1 -0.944444,-0.944444l0,-0.944444a0.944444,0.944444 0 0 0 -0.944444,-0.944444l-5.666667,0z" fill="none" id="svg_1"/>
+ </g>
+</svg>

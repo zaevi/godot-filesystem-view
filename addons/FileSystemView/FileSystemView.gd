@@ -47,7 +47,7 @@ func change_view(view):
 	current_view.hide_empty_dirs = view.hide_empty_dirs
 	current_view.apply_include = view.apply_include
 	current_view.apply_exclude = view.apply_exclude
-	$VBox/HBox2/ShowEmpty.pressed = view.hide_empty_dirs
+	$VBox/HBox2/HideEmpty.pressed = view.hide_empty_dirs
 	$VBox/HBox2/ApplyInclude.pressed = view.apply_include
 	$VBox/HBox2/ApplyExclude.pressed = view.apply_exclude
 	refresh_tree()
@@ -213,10 +213,16 @@ func _on_ViewEditor_closed():
 	save_views()
 	update_view_list()
 	
-	if current_view in views:
-		var id = views.find(current_view)
+	var found_view
+	for view in views:
+		if view.name == current_view.name:
+			found_view = view
+			break
+
+	if found_view:
+		var id = views.find(found_view)
 		option_btn.select(id)
-		change_view(current_view)
+		change_view(found_view)
 	else:
 		option_btn.select(0)
 		change_view(views[0])
@@ -267,7 +273,7 @@ func _on_ApplyExclude_toggled(button_pressed):
 	refresh_tree()
 
 
-func _on_ShowEmpty_toggled(button_pressed):
+func _on_HideEmpty_toggled(button_pressed):
 	current_view.hide_empty_dirs = button_pressed
 	refresh_tree()
 

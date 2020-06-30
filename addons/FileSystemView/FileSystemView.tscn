@@ -89,11 +89,11 @@ hint_tooltip = "Apply Exclude"
 toggle_mode = true
 icon = ExtResource( 4 )
 
-[node name="ShowEmpty" type="Button" parent="VBox/HBox2"]
+[node name="HideEmpty" type="Button" parent="VBox/HBox2"]
 margin_left = 1156.0
 margin_right = 1184.0
 margin_bottom = 42.0
-hint_tooltip = "Show Empty Folder"
+hint_tooltip = "Hide Empty Folder"
 toggle_mode = true
 icon = ExtResource( 2 )
 
@@ -113,6 +113,6 @@ __meta__ = {
 [connection signal="pressed" from="VBox/HBox2/Locate" to="." method="_on_Locate_pressed"]
 [connection signal="toggled" from="VBox/HBox2/ApplyInclude" to="." method="_on_ApplyInclude_toggled"]
 [connection signal="toggled" from="VBox/HBox2/ApplyExclude" to="." method="_on_ApplyExclude_toggled"]
-[connection signal="toggled" from="VBox/HBox2/ShowEmpty" to="." method="_on_ShowEmpty_toggled"]
+[connection signal="toggled" from="VBox/HBox2/HideEmpty" to="." method="_on_HideEmpty_toggled"]
 [connection signal="item_activated" from="VBox/Tree" to="." method="_on_Tree_item_activated"]
 [connection signal="item_rmb_selected" from="VBox/Tree" to="." method="_on_Tree_item_rmb_selected"]

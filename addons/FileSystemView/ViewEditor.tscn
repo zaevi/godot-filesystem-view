@@ -3,7 +3,6 @@
 [ext_resource path="res://addons/FileSystemView/ViewEditor.gd" type="Script" id=1]
 
 [node name="ViewEditor" type="AcceptDialog"]
-visible = true
 anchor_top = -0.000733541
 anchor_bottom = -0.000733541
 margin_top = 0.440125
@@ -116,7 +115,8 @@ wrap_enabled = true
 margin_top = 316.0
 margin_right = 406.0
 margin_bottom = 360.0
-text = "Hide Empty Folders"
+hint_tooltip = "An \"empty\" folder means a folder with no resources available in current view."
+text = "Hide \"Empty\" Folders"
 [connection signal="item_selected" from="HBox/HBox/Option" to="." method="_on_Option_item_selected"]
 [connection signal="pressed" from="HBox/HBox/Add" to="." method="_on_Add_pressed"]
 [connection signal="pressed" from="HBox/HBox/Delete" to="." method="_on_Delete_pressed"]

@@ -87,7 +87,6 @@ func _on_Option_item_selected(id):
 
 
 func _on_Icon_text_changed(new_text):
-	update_icon_preview()
 	if has_icon(new_text, "EditorIcons"):
 		edit_icon.right_icon = get_icon(new_text, "EditorIcons")
 	else:

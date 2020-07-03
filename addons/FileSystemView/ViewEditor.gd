@@ -40,6 +40,7 @@ func load_view(idx: int):
 	var view = views[idx]
 	edit_name.text = view.name
 	edit_icon.text = view.icon
+	_on_Icon_text_changed(view.icon)
 	edit_apply_include.pressed = view.apply_include
 	edit_include.text = view.include
 	edit_apply_exclude.pressed = view.apply_exclude
@@ -83,3 +84,11 @@ func _on_Option_item_selected(id):
 	save_current()
 	update_view_list()
 	load_view(id)
+
+
+func _on_Icon_text_changed(new_text):
+	update_icon_preview()
+	if has_icon(new_text, "EditorIcons"):
+		edit_icon.right_icon = get_icon(new_text, "EditorIcons")
+	else:
+		edit_icon.right_icon = null

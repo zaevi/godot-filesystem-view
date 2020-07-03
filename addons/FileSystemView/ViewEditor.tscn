@@ -18,7 +18,7 @@ __meta__ = {
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 414.0
-margin_bottom = 368.0
+margin_bottom = 486.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -36,11 +36,13 @@ size_flags_horizontal = 3
 margin_left = 378.0
 margin_right = 390.0
 margin_bottom = 42.0
+hint_tooltip = "Add New View"
 
 [node name="Delete" type="Button" parent="HBox/HBox"]
 margin_left = 394.0
 margin_right = 406.0
 margin_bottom = 42.0
+hint_tooltip = "Delete View"
 
 [node name="Control" type="Control" parent="HBox"]
 margin_top = 46.0
@@ -51,7 +53,7 @@ rect_min_size = Vector2( 0, 10 )
 [node name="Grid" type="GridContainer" parent="HBox"]
 margin_top = 60.0
 margin_right = 406.0
-margin_bottom = 312.0
+margin_bottom = 430.0
 columns = 2
 
 [node name="Label" type="Label" parent="HBox/Grid"]
@@ -82,41 +84,42 @@ margin_right = 406.0
 margin_bottom = 96.0
 
 [node name="ApplyInclude" type="CheckBox" parent="HBox/Grid"]
-margin_top = 100.0
+margin_top = 218.0
 margin_right = 147.0
-margin_bottom = 144.0
+margin_bottom = 262.0
 size_flags_vertical = 0
 text = "Include:"
 
 [node name="Include" type="TextEdit" parent="HBox/Grid"]
 margin_left = 151.0
-margin_top = 100.0
+margin_top = 218.0
 margin_right = 406.0
-margin_bottom = 174.0
+margin_bottom = 292.0
 rect_min_size = Vector2( 0, 74 )
 wrap_enabled = true
 
 [node name="ApplyExclude" type="CheckBox" parent="HBox/Grid"]
-margin_top = 178.0
+margin_top = 296.0
 margin_right = 147.0
-margin_bottom = 222.0
+margin_bottom = 340.0
 size_flags_vertical = 0
 text = "Exclude:"
 
 [node name="Exclude" type="TextEdit" parent="HBox/Grid"]
 margin_left = 151.0
-margin_top = 178.0
+margin_top = 296.0
 margin_right = 406.0
-margin_bottom = 252.0
+margin_bottom = 370.0
 rect_min_size = Vector2( 0, 74 )
 wrap_enabled = true
 
 [node name="HideFolder" type="CheckBox" parent="HBox"]
-margin_top = 316.0
+margin_top = 434.0
 margin_right = 406.0
-margin_bottom = 360.0
-hint_tooltip = "An \"empty\" folder means a folder with no resources available in current view."
+margin_bottom = 478.0
+hint_tooltip = "\"empty\" means folder with no resources available in current view."
 text = "Hide \"Empty\" Folders"
 [connection signal="item_selected" from="HBox/HBox/Option" to="." method="_on_Option_item_selected"]
 [connection signal="pressed" from="HBox/HBox/Add" to="." method="_on_Add_pressed"]
 [connection signal="pressed" from="HBox/HBox/Delete" to="." method="_on_Delete_pressed"]
+[connection signal="text_changed" from="HBox/Grid/Icon" to="." method="_on_Icon_text_changed"]

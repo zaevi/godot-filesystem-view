@@ -20,6 +20,9 @@ func _ready():
 
 
 func init(plugin: EditorPlugin):
+	
+	tree.set_drag_forwarding(self)
+	
 	agent._set_interface(plugin)
 	
 	$VBox/HBox/Config.icon = get_icon("Tools", "EditorIcons")
@@ -34,8 +37,6 @@ func init(plugin: EditorPlugin):
 	_on_MenuButton_item_selected(0)
 	
 	agent.filesystem.connect("filesystem_changed", self, "refresh_tree")
-	
-	
 
 
 func change_view(view):
@@ -203,6 +204,7 @@ func _on_ConfigBtn_pressed():
 		config_dialog.connect("popup_hide", self, "_on_ViewEditor_closed")
 		config_dialog.views = views
 		config_dialog.update_view_list()
+		config_dialog.theme = agent.interface.get_base_control().theme
 	
 	config_dialog.load_view(option_btn.selected)
 	config_dialog.popup_centered()
@@ -277,3 +279,7 @@ func _on_HideEmpty_toggled(button_pressed):
 	current_view.hide_empty_dirs = button_pressed
 	refresh_tree()
 
+func get_drag_data_fw(position, from_control):
+	var path = tree.get_selected().get_metadata(0)
+	agent.select_item(path)
+	return agent.filesystem_dock.get_drag_data_fw(get_global_mouse_position(),agent.tree)

@@ -261,6 +261,7 @@ func _on_Locate_pressed():
 func _on_Tree_item_rmb_selected(position):
 	var path = tree.get_selected().get_metadata(0)
 	agent.select_item(path)
+	position += tree.rect_global_position - agent.tree.rect_global_position
 	agent.tree.emit_signal("item_rmb_selected", position)
 	pass # Replace with function body.
 

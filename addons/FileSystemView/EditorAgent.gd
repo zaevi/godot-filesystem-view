@@ -43,6 +43,8 @@ func _locate_item(root: TreeItem, path: String):
 
 func locate_item(path: String) -> TreeItem:
 	var res_root = tree.get_root().get_children().get_next()
+	if path == "res://":
+		return res_root
 	return _locate_item(res_root, path)
 
 func select_item(path: String):
@@ -52,3 +54,5 @@ func select_item(path: String):
 	tree.select_mode = Tree.SELECT_SINGLE
 	item.select(0)
 	tree.select_mode = Tree.SELECT_MULTI
+	# fix show-in-file-manager
+	tree.emit_signal("multi_selected", null, 0, true)

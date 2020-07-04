@@ -141,7 +141,7 @@ func _create_tree(parent: TreeItem, current: EditorFileSystemDirectory):
 	item.set_icon_modulate(0, tree.get_color("folder_icon_modulate", "FileDialog"));
 	
 	var dir_path = current.get_path()
-	item.set_metadata(0, current.get_path())
+	item.set_metadata(0, dir_path)
 	
 	for i in current.get_subdir_count():
 		_create_tree(item, current.get_subdir(i))

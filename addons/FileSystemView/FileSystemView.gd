@@ -5,7 +5,7 @@ const PLUGIN_DIR = "res://addons/FileSystemView/"
 
 var View = preload("res://addons/FileSystemView/View.gd")
 
-var agent = preload("EditorAgent.gd").new()
+var agent
 
 onready var tree : Tree = $VBox/Tree
 onready var option_btn : OptionButton = $VBox/HBox/Option
@@ -15,19 +15,15 @@ var current_view
 
 var config_dialog = null
 
+
 func _ready():
-	pass
+	if not agent:
+		return
 
-
-func init(plugin: EditorPlugin):
-	
-	tree.set_drag_forwarding(self)
-	
-	agent._set_interface(plugin)
-	
 	$VBox/HBox/Config.icon = get_icon("Tools", "EditorIcons")
 	$VBox/HBox2/Unfold.icon = get_icon("AnimationTrackGroup", "EditorIcons")
 	$VBox/HBox2/Collapse.icon = get_icon("AnimationTrackList", "EditorIcons")
+	tree.set_drag_forwarding(self)
 	
 	current_view = View.new()
 	load_views()
@@ -40,7 +36,6 @@ func init(plugin: EditorPlugin):
 
 
 func change_view(view):
-#	current_view = view
 	current_view.name = view.name
 	current_view.icon = view.icon
 	current_view.include = view.include
@@ -200,7 +195,6 @@ func _on_ConfigBtn_pressed():
 	if not config_dialog:
 		config_dialog = preload("ViewEditor.tscn").instance()
 		agent.interface.get_base_control().add_child(config_dialog)
-		config_dialog.init()
 		config_dialog.connect("popup_hide", self, "_on_ViewEditor_closed")
 		config_dialog.views = views
 		config_dialog.update_view_list()
@@ -263,7 +257,6 @@ func _on_Tree_item_rmb_selected(position):
 	agent.select_item(path)
 	position += tree.rect_global_position - agent.tree.rect_global_position
 	agent.tree.emit_signal("item_rmb_selected", position)
-	pass # Replace with function body.
 
 
 func _on_ApplyInclude_toggled(button_pressed):

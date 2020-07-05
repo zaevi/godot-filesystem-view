@@ -16,10 +16,6 @@ var views : Array
 var current_view
 
 func _ready():
-	pass
-
-
-func init():
 	$HBox/HBox/Add.icon = get_icon("Add", "EditorIcons")
 	$HBox/HBox/Delete.icon = get_icon("Remove", "EditorIcons")
 

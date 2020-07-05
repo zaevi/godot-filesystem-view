@@ -9,7 +9,7 @@ var filesystem_dock : Node
 var rmb_popup
 var tree : Tree
 
-func _set_interface(plugin: EditorPlugin):
+func _init(plugin):
 	self.plugin = plugin
 	interface = plugin.get_editor_interface()
 	filesystem = interface.get_resource_filesystem()
@@ -29,6 +29,7 @@ func open_file(file_path: String):
 #		editor_node.call("load_resource", file_path) # invalid call
 	filesystem_dock.call("_select_file", file_path, false)
 
+
 func _locate_item(root: TreeItem, path: String):
 	var item : TreeItem = root.get_children()
 	while item:
@@ -41,11 +42,13 @@ func _locate_item(root: TreeItem, path: String):
 	print("can't find treepath ", path)
 	return null
 
+
 func locate_item(path: String) -> TreeItem:
 	var res_root = tree.get_root().get_children().get_next()
 	if path == "res://":
 		return res_root
 	return _locate_item(res_root, path)
+
 
 func select_item(path: String):
 	var item = locate_item(path)

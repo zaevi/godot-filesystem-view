@@ -105,4 +105,5 @@ func _on_Icon_text_changed(new_text):
 
 func _on_ViewEditor_closed():
 	save_current()
+	update_view_list()
 	emit_signal("closed")

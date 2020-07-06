@@ -5,7 +5,7 @@ const PLUGIN_DIR = "res://addons/FileSystemView/"
 
 var View = preload("res://addons/FileSystemView/View.gd")
 
-var agent
+var plugin
 
 onready var tree : Tree = $VBox/Tree
 onready var option_btn : OptionButton = $VBox/HBox/Option
@@ -13,11 +13,9 @@ onready var option_btn : OptionButton = $VBox/HBox/Option
 var views: Array
 var current_view
 
-var config_dialog = null
-
 
 func _ready():
-	if not agent:
+	if not plugin:
 		return
 
 	$VBox/HBox/Config.icon = get_icon("Tools", "EditorIcons")
@@ -25,14 +23,15 @@ func _ready():
 	$VBox/HBox2/Collapse.icon = get_icon("AnimationTrackList", "EditorIcons")
 	tree.set_drag_forwarding(self)
 	
+	views = plugin.views
 	current_view = View.new()
-	load_views()
 	update_view_list()
 	
 	option_btn.select(0)
 	_on_MenuButton_item_selected(0)
 	
-	agent.filesystem.connect("filesystem_changed", self, "refresh_tree")
+	plugin.filesystem.connect("filesystem_changed", self, "refresh_tree")
+	plugin.config_dialog.connect("closed", self, "_on_ViewEditor_closed")
 
 
 func change_view(view):
@@ -60,46 +59,9 @@ func update_view_list():
 		id += 1
 
 
-func load_views():
-	views = []
-	
-	var config = ConfigFile.new()
-	if config.load(PLUGIN_DIR + "views.cfg") != OK:
-		if config.load(PLUGIN_DIR + "default_views.cfg") == OK:
-			print_debug("FileSystemView: load default_views.cfg")
-			
-	for i in config.get_sections():
-		var view = View.new()
-		view.name = config.get_value(i, "name", "")
-		view.icon = config.get_value(i, "icon", "")
-		view.apply_include = config.get_value(i, "apply_include", true)
-		view.apply_exclude = config.get_value(i, "apply_exclude", false)
-		view.include = config.get_value(i, "include", "")
-		view.exclude = config.get_value(i, "exclude", "")
-		view.hide_empty_dirs = config.get_value(i, "hide_empty_dirs", true)
-		views.append(view)
-
-
-func save_views():
-	var config = ConfigFile.new()
-	var i = 0
-	for view in views:
-		var istr = str(i)
-		config.set_value(istr, "name", view.name)
-		config.set_value(istr, "icon", view.icon)
-		config.set_value(istr, "apply_include", view.apply_include)
-		config.set_value(istr, "include", view.include)
-		config.set_value(istr, "apply_exclude", view.apply_exclude)
-		config.set_value(istr, "exclude", view.exclude)
-		config.set_value(istr, "hide_empty_dirs", view.hide_empty_dirs)
-		i += 1
-		
-	config.save(PLUGIN_DIR + "views.cfg")
-
-
 func refresh_tree():
 	tree.clear()
-	var fs = agent.filesystem.get_filesystem()
+	var fs = plugin.filesystem.get_filesystem()
 	_create_tree(null, fs)
 	
 	if current_view and current_view.hide_empty_dirs:
@@ -169,11 +131,6 @@ func _get_tree_item_icon(dir: EditorFileSystemDirectory, idx: int) -> Texture:
 	return icon
 
 
-func _exit_tree():
-	if config_dialog:
-		config_dialog.queue_free()
-
-
 func _on_MenuButton_item_selected(id):
 	if id >= 0:
 		var view = views[id]
@@ -188,25 +145,15 @@ func _on_Tree_item_activated():
 	if path.ends_with("/"):
 		item.collapsed = not item.collapsed
 	else:
-		agent.open_file(path)
+		plugin.fsd_open_file(path)
 
 
 func _on_ConfigBtn_pressed():
-	if not config_dialog:
-		config_dialog = preload("ViewEditor.tscn").instance()
-		agent.interface.get_base_control().add_child(config_dialog)
-		config_dialog.connect("popup_hide", self, "_on_ViewEditor_closed")
-		config_dialog.views = views
-		config_dialog.update_view_list()
-		config_dialog.theme = agent.interface.get_base_control().theme
-	
-	config_dialog.load_view(option_btn.selected)
-	config_dialog.popup_centered()
+	plugin.config_dialog.load_view(option_btn.selected)
+	plugin.config_dialog.popup_centered()
 
 
 func _on_ViewEditor_closed():
-	config_dialog.save_current()
-	save_views()
 	update_view_list()
 	
 	var found_view
@@ -249,14 +196,14 @@ func _on_Collapse_pressed():
 
 
 func _on_Locate_pressed():
-	pass # Replace with function body.
+	pass
 
 
 func _on_Tree_item_rmb_selected(position):
 	var path = tree.get_selected().get_metadata(0)
-	agent.select_item(path)
-	position += tree.rect_global_position - agent.tree.rect_global_position
-	agent.tree.emit_signal("item_rmb_selected", position)
+	plugin.fsd_select_item(path)
+	position += tree.rect_global_position - plugin.tree.rect_global_position
+	plugin.tree.emit_signal("item_rmb_selected", position)
 
 
 func _on_ApplyInclude_toggled(button_pressed):
@@ -275,5 +222,5 @@ func _on_HideEmpty_toggled(button_pressed):
 
 func get_drag_data_fw(position, from_control):
 	var path = tree.get_selected().get_metadata(0)
-	agent.select_item(path)
-	return agent.filesystem_dock.get_drag_data_fw(get_global_mouse_position(),agent.tree)
+	plugin.fsd_select_item(path)
+	return plugin.filesystem_dock.get_drag_data_fw(get_global_mouse_position(),plugin.tree)

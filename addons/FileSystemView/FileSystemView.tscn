@@ -37,6 +37,7 @@ expand_icon = true
 margin_left = 1172.0
 margin_right = 1184.0
 margin_bottom = 42.0
+hint_tooltip = "Config Views"
 
 [node name="HBox2" type="HBoxContainer" parent="VBox"]
 margin_top = 46.0

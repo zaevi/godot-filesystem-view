@@ -12,10 +12,24 @@ onready var edit_exclude: TextEdit = $HBox/Grid/Exclude
 onready var edit_hide_dir: CheckBox = $HBox/HideFolder
 onready var option_btn: OptionButton = $HBox/HBox/Option
 
+signal closed
+
+var plugin
+
 var views : Array
 var current_view
 
+func _init():
+	connect("popup_hide", self, "_on_ViewEditor_closed")
+
+
 func _ready():
+	if not plugin:
+		return
+	
+	views = plugin.views
+	update_view_list()
+	
 	$HBox/HBox/Add.icon = get_icon("Add", "EditorIcons")
 	$HBox/HBox/Delete.icon = get_icon("Remove", "EditorIcons")
 
@@ -87,3 +101,8 @@ func _on_Icon_text_changed(new_text):
 		edit_icon.right_icon = get_icon(new_text, "EditorIcons")
 	else:
 		edit_icon.right_icon = null
+
+
+func _on_ViewEditor_closed():
+	save_current()
+	emit_signal("closed")

@@ -13,6 +13,7 @@ onready var option_btn : OptionButton = $VBox/HBox/Option
 var views: Array
 var current_view
 
+var _is_changing = false
 
 func _ready():
 	if not plugin:
@@ -42,9 +43,11 @@ func change_view(view):
 	current_view.hide_empty_dirs = view.hide_empty_dirs
 	current_view.apply_include = view.apply_include
 	current_view.apply_exclude = view.apply_exclude
+	_is_changing = true
 	$VBox/HBox2/HideEmpty.pressed = view.hide_empty_dirs
 	$VBox/HBox2/ApplyInclude.pressed = view.apply_include
 	$VBox/HBox2/ApplyExclude.pressed = view.apply_exclude
+	_is_changing = false
 	refresh_tree()
 
 
@@ -207,18 +210,22 @@ func _on_Tree_item_rmb_selected(position):
 
 
 func _on_ApplyInclude_toggled(button_pressed):
-	current_view.apply_include = button_pressed
-	refresh_tree()
+	if not _is_changing:
+		current_view.apply_include = button_pressed
+		refresh_tree()
 
 
 func _on_ApplyExclude_toggled(button_pressed):
-	current_view.apply_exclude = button_pressed
-	refresh_tree()
+	if not _is_changing:
+		current_view.apply_exclude = button_pressed
+		refresh_tree()
 
 
 func _on_HideEmpty_toggled(button_pressed):
-	current_view.hide_empty_dirs = button_pressed
-	refresh_tree()
+	if not _is_changing:
+		current_view.hide_empty_dirs = button_pressed
+		refresh_tree()
+
 
 func get_drag_data_fw(position, from_control):
 	var path = tree.get_selected().get_metadata(0)

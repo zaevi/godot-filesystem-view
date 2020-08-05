@@ -15,6 +15,9 @@ var current_view
 
 var _is_changing = false
 
+var _cache_collapsed = {}
+
+
 func _ready():
 	if not plugin:
 		return
@@ -36,6 +39,7 @@ func _ready():
 
 
 func change_view(view):
+	cache_collapsed()
 	current_view.name = view.name
 	current_view.icon = view.icon
 	current_view.include = view.include
@@ -48,6 +52,7 @@ func change_view(view):
 	$VBox/HBox2/ApplyInclude.pressed = view.apply_include
 	$VBox/HBox2/ApplyExclude.pressed = view.apply_exclude
 	_is_changing = false
+	tree.clear()
 	refresh_tree()
 
 
@@ -63,12 +68,18 @@ func update_view_list():
 
 
 func refresh_tree():
-	tree.clear()
+	if tree.get_root():
+		cache_collapsed()
+		tree.clear()
+		
 	var fs = plugin.filesystem.get_filesystem()
 	_create_tree(null, fs)
 	
 	if current_view and current_view.hide_empty_dirs:
 		_clean_empty_dir(tree.get_root())
+	
+	if current_view.name and _cache_collapsed.has(current_view.name):
+		_set_folder_collapsed(tree.get_root(), false, _cache_collapsed[current_view.name])
 
 
 func _clean_empty_dir(current: TreeItem):
@@ -231,3 +242,23 @@ func get_drag_data_fw(position, from_control):
 	var path = tree.get_selected().get_metadata(0)
 	plugin.fsd_select_item(path)
 	return plugin.filesystem_dock.get_drag_data_fw(get_global_mouse_position(),plugin.tree)
+
+
+func cache_collapsed():
+	var root = tree.get_root()	
+	if not current_view.name or not root:
+		return
+	var list = []
+	_cache_collapsed_list(root, list)
+	_cache_collapsed[current_view.name] = list
+
+
+func _cache_collapsed_list(parent: TreeItem, list: Array):
+	var item: TreeItem = parent.get_children()
+	while item: 
+		var path : String = item.get_metadata(0)
+		if path.ends_with("/"):
+			_cache_collapsed_list(item, list)
+			if item.collapsed:
+				list.append(path)
+		item = item.get_next()

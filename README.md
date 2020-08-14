@@ -4,7 +4,7 @@
 
 A Godot tool similar to FileSystem dock, allows you to customize filters(views) to work with project resources.
 
-![demo1](https://user-images.githubusercontent.com/12966814/86585984-cdc02c80-bfb9-11ea-8458-cc5601eaaba5.gif)
+![demo1](https://user-images.githubusercontent.com/12966814/90251893-1f898b80-de71-11ea-9a03-49f3c1dce84f.gif)
 
 ## Install
 
@@ -40,6 +40,20 @@ View configs are saved in `views.cfg`. If it doesn't exists, the plugin will loa
 - Folders with no available files in current view can be hidden.
 
 > These options can be temporary toggled when in use.
+
+## ChangeLog
+
+### 1.1
+
+- Now folder state can keep when switching views.
+
+- Update `folder_empty` icon.
+
+- Fix bugs and typo.
+
+### 1.0
+
+- First release.
 
 ## Licence
 

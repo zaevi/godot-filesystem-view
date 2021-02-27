@@ -18,107 +18,108 @@ __meta__ = {
 margin_left = 8.0
 margin_top = 8.0
 margin_right = 414.0
-margin_bottom = 486.0
+margin_bottom = 282.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HBox" type="HBoxContainer" parent="HBox"]
 margin_right = 406.0
-margin_bottom = 42.0
+margin_bottom = 20.0
 
 [node name="Option" type="OptionButton" parent="HBox/HBox"]
 margin_right = 374.0
-margin_bottom = 42.0
+margin_bottom = 20.0
 size_flags_horizontal = 3
 
 [node name="Add" type="Button" parent="HBox/HBox"]
 margin_left = 378.0
 margin_right = 390.0
-margin_bottom = 42.0
+margin_bottom = 20.0
 hint_tooltip = "Add New View"
 
 [node name="Delete" type="Button" parent="HBox/HBox"]
 margin_left = 394.0
 margin_right = 406.0
-margin_bottom = 42.0
+margin_bottom = 20.0
 hint_tooltip = "Delete View"
 
 [node name="Control" type="Control" parent="HBox"]
-margin_top = 46.0
+margin_top = 24.0
 margin_right = 406.0
-margin_bottom = 56.0
+margin_bottom = 34.0
 rect_min_size = Vector2( 0, 10 )
 
 [node name="Grid" type="GridContainer" parent="HBox"]
-margin_top = 60.0
+margin_top = 38.0
 margin_right = 406.0
-margin_bottom = 430.0
+margin_bottom = 246.0
 columns = 2
 
 [node name="Label" type="Label" parent="HBox/Grid"]
 margin_top = 5.0
-margin_right = 147.0
-margin_bottom = 41.0
+margin_right = 81.0
+margin_bottom = 19.0
 text = "Name:"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Name" type="LineEdit" parent="HBox/Grid"]
-margin_left = 151.0
+margin_left = 85.0
 margin_right = 406.0
-margin_bottom = 46.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="Label2" type="Label" parent="HBox/Grid"]
-margin_top = 55.0
-margin_right = 147.0
-margin_bottom = 91.0
+margin_top = 33.0
+margin_right = 81.0
+margin_bottom = 47.0
 text = "Icon:"
 
 [node name="Icon" type="LineEdit" parent="HBox/Grid"]
-margin_left = 151.0
-margin_top = 50.0
+margin_left = 85.0
+margin_top = 28.0
 margin_right = 406.0
-margin_bottom = 96.0
+margin_bottom = 52.0
 
 [node name="ApplyInclude" type="CheckBox" parent="HBox/Grid"]
-margin_top = 218.0
-margin_right = 147.0
-margin_bottom = 262.0
+margin_top = 56.0
+margin_right = 81.0
+margin_bottom = 80.0
 size_flags_vertical = 0
 text = "Include:"
 
 [node name="Include" type="TextEdit" parent="HBox/Grid"]
-margin_left = 151.0
-margin_top = 218.0
+margin_left = 85.0
+margin_top = 56.0
 margin_right = 406.0
-margin_bottom = 292.0
+margin_bottom = 130.0
 rect_min_size = Vector2( 0, 74 )
 wrap_enabled = true
 
 [node name="ApplyExclude" type="CheckBox" parent="HBox/Grid"]
-margin_top = 296.0
-margin_right = 147.0
-margin_bottom = 340.0
+margin_top = 134.0
+margin_right = 81.0
+margin_bottom = 158.0
 size_flags_vertical = 0
 text = "Exclude:"
 
 [node name="Exclude" type="TextEdit" parent="HBox/Grid"]
-margin_left = 151.0
-margin_top = 296.0
+margin_left = 85.0
+margin_top = 134.0
 margin_right = 406.0
-margin_bottom = 370.0
+margin_bottom = 208.0
 rect_min_size = Vector2( 0, 74 )
 wrap_enabled = true
 
 [node name="HideFolder" type="CheckBox" parent="HBox"]
-margin_top = 434.0
+margin_top = 250.0
 margin_right = 406.0
-margin_bottom = 478.0
+margin_bottom = 274.0
 hint_tooltip = "\"empty\" means folder with no resources available in current view."
 text = "Hide \"Empty\" Folders"
+
 [connection signal="item_selected" from="HBox/HBox/Option" to="." method="_on_Option_item_selected"]
 [connection signal="pressed" from="HBox/HBox/Add" to="." method="_on_Add_pressed"]
 [connection signal="pressed" from="HBox/HBox/Delete" to="." method="_on_Delete_pressed"]

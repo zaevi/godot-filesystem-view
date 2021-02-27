@@ -23,36 +23,36 @@ __meta__ = {
 }
 
 [node name="HBox" type="HBoxContainer" parent="VBox"]
-margin_right = 1184.0
-margin_bottom = 42.0
+margin_right = 288.0
+margin_bottom = 20.0
 
 [node name="Option" type="OptionButton" parent="VBox/HBox"]
-margin_right = 1168.0
-margin_bottom = 42.0
+margin_right = 272.0
+margin_bottom = 20.0
 size_flags_horizontal = 3
 clip_text = true
 expand_icon = true
 
 [node name="Config" type="Button" parent="VBox/HBox"]
-margin_left = 1172.0
-margin_right = 1184.0
-margin_bottom = 42.0
+margin_left = 276.0
+margin_right = 288.0
+margin_bottom = 20.0
 hint_tooltip = "Config Views"
 
 [node name="HBox2" type="HBoxContainer" parent="VBox"]
-margin_top = 46.0
-margin_right = 1184.0
-margin_bottom = 88.0
+margin_top = 24.0
+margin_right = 288.0
+margin_bottom = 46.0
 
 [node name="Collapse" type="Button" parent="VBox/HBox2"]
 margin_right = 12.0
-margin_bottom = 42.0
+margin_bottom = 22.0
 hint_tooltip = "Collapse All"
 
 [node name="Unfold" type="Button" parent="VBox/HBox2"]
 margin_left = 16.0
 margin_right = 28.0
-margin_bottom = 42.0
+margin_bottom = 22.0
 hint_tooltip = "Unfold All"
 
 [node name="VSeparator" type="VSeparator" parent="VBox/HBox2"]
@@ -70,43 +70,44 @@ margin_bottom = 42.0
 [node name="VSeparator2" type="VSeparator" parent="VBox/HBox2"]
 modulate = Color( 1, 1, 1, 0 )
 margin_left = 32.0
-margin_right = 1088.0
-margin_bottom = 42.0
+margin_right = 192.0
+margin_bottom = 22.0
 size_flags_horizontal = 3
 
 [node name="ApplyInclude" type="Button" parent="VBox/HBox2"]
-margin_left = 1092.0
-margin_right = 1120.0
-margin_bottom = 42.0
+margin_left = 196.0
+margin_right = 224.0
+margin_bottom = 22.0
 hint_tooltip = "Apply Include"
 toggle_mode = true
 icon = ExtResource( 3 )
 
 [node name="ApplyExclude" type="Button" parent="VBox/HBox2"]
-margin_left = 1124.0
-margin_right = 1152.0
-margin_bottom = 42.0
+margin_left = 228.0
+margin_right = 256.0
+margin_bottom = 22.0
 hint_tooltip = "Apply Exclude"
 toggle_mode = true
 icon = ExtResource( 4 )
 
 [node name="HideEmpty" type="Button" parent="VBox/HBox2"]
-margin_left = 1156.0
-margin_right = 1184.0
-margin_bottom = 42.0
+margin_left = 260.0
+margin_right = 288.0
+margin_bottom = 22.0
 hint_tooltip = "Hide Empty Folder"
 toggle_mode = true
 icon = ExtResource( 2 )
 
 [node name="Tree" type="Tree" parent="VBox"]
-margin_top = 92.0
-margin_right = 1184.0
-margin_bottom = 844.0
+margin_top = 50.0
+margin_right = 288.0
+margin_bottom = 364.0
 size_flags_vertical = 3
 allow_rmb_select = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
 [connection signal="item_selected" from="VBox/HBox/Option" to="." method="_on_MenuButton_item_selected"]
 [connection signal="pressed" from="VBox/HBox/Config" to="." method="_on_ConfigBtn_pressed"]
 [connection signal="pressed" from="VBox/HBox2/Collapse" to="." method="_on_Collapse_pressed"]

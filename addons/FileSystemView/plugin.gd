@@ -14,8 +14,9 @@ var filesystem_dock : Node
 var rmb_popup
 var tree : Tree
 
-var views : Array = []
+var views : Array
 
+var config : Dictionary
 
 func _enter_tree():
 	interface = get_editor_interface()
@@ -44,39 +45,22 @@ func _exit_tree():
 
 
 func load_views():
-	views.clear()
-	var config = ConfigFile.new()
-	if config.load(PLUGIN_DIR + "views.cfg") != OK:
-		if config.load(PLUGIN_DIR + "default_views.cfg") == OK:
-			print_debug("FileSystemView: load default_views.cfg")
-			
-	for i in config.get_sections():
-		var view = View.new()
-		view.name = config.get_value(i, "name", "")
-		view.icon = config.get_value(i, "icon", "")
-		view.apply_include = config.get_value(i, "apply_include", true)
-		view.apply_exclude = config.get_value(i, "apply_exclude", false)
-		view.include = config.get_value(i, "include", "")
-		view.exclude = config.get_value(i, "exclude", "")
-		view.hide_empty_dirs = config.get_value(i, "hide_empty_dirs", true)
-		views.append(view)
+	var file = File.new()
+	if file.open(PLUGIN_DIR + "config.json", File.READ) != OK:
+		if file.open(PLUGIN_DIR + "defaultConfig.json", File.READ) == OK:
+			print_debug("FileSystemView: load defaultConfig.json")
+	
+	var result = JSON.parse(file.get_as_text()).result
+	self.config = result
+	self.views = self.config.views
 
 
 func save_views():
-	var config = ConfigFile.new()
-	var i = 0
-	for view in views:
-		var istr = str(i)
-		config.set_value(istr, "name", view.name)
-		config.set_value(istr, "icon", view.icon)
-		config.set_value(istr, "apply_include", view.apply_include)
-		config.set_value(istr, "include", view.include)
-		config.set_value(istr, "apply_exclude", view.apply_exclude)
-		config.set_value(istr, "exclude", view.exclude)
-		config.set_value(istr, "hide_empty_dirs", view.hide_empty_dirs)
-		i += 1
-		
-	config.save(PLUGIN_DIR + "views.cfg")
+	var json = to_json(config)
+	var file = File.new()
+	file.open(PLUGIN_DIR + "config.json", File.WRITE)
+	file.store_string(json)
+	file.close()
 
 
 func _on_ViewEditor_closed():

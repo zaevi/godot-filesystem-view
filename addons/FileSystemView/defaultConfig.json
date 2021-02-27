@@ -1,0 +1,86 @@
+{
+    "settings": {},
+    "defaultView": {
+        "name": "(New View)",
+        "icon": "Folder",
+        "apply_include": false,
+        "include": "",
+        "apply_exclude": false,
+        "exclude": "",
+        "hide_empty_dirs": true
+    },
+    "views": [
+        {
+            "name": "(Default)",
+            "icon": "Folder",
+            "apply_include": false,
+            "include": "",
+            "apply_exclude": false,
+            "exclude": "",
+            "hide_empty_dirs": true
+        },
+        {
+            "name": "Scenes",
+            "icon": "PackedScene",
+            "apply_include": true,
+            "include": "*.tscn",
+            "apply_exclude": false,
+            "exclude": "",
+            "hide_empty_dirs": true
+        },
+        {
+            "name": "GDScripts",
+            "icon": "GDScript",
+            "apply_include": true,
+            "include": "*.gd",
+            "apply_exclude": false,
+            "exclude": "",
+            "hide_empty_dirs": true
+        },
+        {
+            "name": "My Scripts",
+            "icon": "Script",
+            "apply_include": true,
+            "include": "*.gd;*.cs;*.vs;*.gdns",
+            "apply_exclude": true,
+            "exclude": "addons/*",
+            "hide_empty_dirs": true
+        },
+        {
+            "name": "C#",
+            "icon": "CSharpScript",
+            "apply_include": true,
+            "include": "*.cs",
+            "apply_exclude": false,
+            "exclude": "",
+            "hide_empty_dirs": true
+        },
+        {
+            "name": "Textures",
+            "icon": "Image",
+            "apply_include": true,
+            "include": "*.bmp;*.jpg;*.jpeg;*.png;*.tga;*.svg;*.svgz;*.webp",
+            "apply_exclude": false,
+            "exclude": "addons/*",
+            "hide_empty_dirs": true
+        },
+        {
+            "name": "Sounds",
+            "icon": "AudioStreamSample",
+            "apply_include": true,
+            "include": "*.wav;*.ogg;*.mp3",
+            "apply_exclude": false,
+            "exclude": "",
+            "hide_empty_dirs": true
+        },
+        {
+            "name": "Addons",
+            "icon": "AssetLib",
+            "apply_include": true,
+            "include": "addons/*",
+            "apply_exclude": false,
+            "exclude": "",
+            "hide_empty_dirs": true
+        }
+    ]
+}

@@ -1,8 +1,6 @@
 tool
 extends AcceptDialog
 
-var View = preload("res://addons/FileSystemView/View.gd")
-
 onready var edit_name: LineEdit = $HBox/Grid/Name
 onready var edit_icon: LineEdit = $HBox/Grid/Icon
 onready var edit_apply_include : CheckBox = $HBox/Grid/ApplyInclude
@@ -48,32 +46,33 @@ func update_view_list():
 func load_view(idx: int):
 	option_btn.select(idx)
 	var view = views[idx]
-	edit_name.text = view.name
-	edit_icon.text = view.icon
+	
+	edit_name.text				= view.name
+	edit_icon.text				= view.icon
+	edit_apply_include.pressed	= view.apply_include
+	edit_include.text			= view.include
+	edit_apply_exclude.pressed	= view.apply_exclude
+	edit_exclude.text			= view.exclude
+	edit_hide_dir.pressed 		= view.hide_empty_dirs
+	
 	_on_Icon_text_changed(view.icon)
-	edit_apply_include.pressed = view.apply_include
-	edit_include.text = view.include
-	edit_apply_exclude.pressed = view.apply_exclude
-	edit_exclude.text = view.exclude
-	edit_hide_dir.pressed = view.hide_empty_dirs
 	current_view = view
 
 
 func save_current():
-	current_view.name = edit_name.text
-	current_view.icon = edit_icon.text
-	current_view.apply_include = edit_apply_include.pressed
-	current_view.include = edit_include.text
-	current_view.apply_exclude = edit_apply_exclude.pressed
-	current_view.exclude = edit_exclude.text
-	current_view.hide_empty_dirs = edit_hide_dir.pressed
+	current_view.name				= edit_name.text
+	current_view.icon				= edit_icon.text
+	current_view.apply_include		= edit_apply_include.pressed
+	current_view.include			= edit_include.text
+	current_view.apply_exclude		= edit_apply_exclude.pressed
+	current_view.exclude			= edit_exclude.text
+	current_view.hide_empty_dirs	= edit_hide_dir.pressed
 
 
 func _on_Add_pressed():
 	save_current()
 	
-	var view = View.new()
-	view.name = "(New View)"
+	var view = plugin.config.defaultView.duplicate()
 	views.append(view)
 	
 	update_view_list()

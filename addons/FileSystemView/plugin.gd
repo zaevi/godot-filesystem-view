@@ -11,11 +11,10 @@ var interface: EditorInterface
 var filesystem: EditorFileSystem
 var editor_node : Node
 var filesystem_dock : Node
-var rmb_popup
+var filesystem_popup : PopupMenu
 var tree : Tree
 
 var views : Array
-
 var config : Dictionary
 
 func _enter_tree():
@@ -26,6 +25,9 @@ func _enter_tree():
 	for i in filesystem_dock.get_children():
 		if i is VSplitContainer:
 			tree = i.get_child(0)
+		elif i is PopupMenu:
+			filesystem_popup = i
+		if tree and filesystem_popup:
 			break
 	
 	load_views()

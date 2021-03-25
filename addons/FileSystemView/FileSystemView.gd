@@ -214,10 +214,13 @@ func _on_Locate_pressed():
 
 
 func _on_Tree_item_rmb_selected(position):
-	var path = tree.get_selected().get_metadata(0)
-	plugin.fsd_select_item(path)
-	position += tree.rect_global_position - plugin.tree.rect_global_position
-	plugin.tree.emit_signal("item_rmb_selected", position)
+	var paths = get_selected_paths()
+	plugin.fsd_select_item(paths[0])
+#	position += tree.rect_global_position - plugin.tree.rect_global_position
+#	plugin.tree.emit_signal("item_rmb_selected", position)
+	$Popup.fill(paths)
+	$Popup.set_position(tree.get_global_rect().position + position)
+	$Popup.popup()
 
 
 func _on_ApplyInclude_toggled(button_pressed):
@@ -239,8 +242,8 @@ func _on_HideEmpty_toggled(button_pressed):
 
 
 func get_drag_data_fw(position, from_control):
-	var path = tree.get_selected().get_metadata(0)
-	plugin.fsd_select_item(path)
+	var paths = get_selected_paths()
+	plugin.fsd_select_item(paths[0]) # todo multi-file-drag
 	return plugin.filesystem_dock.get_drag_data_fw(get_global_mouse_position(),plugin.tree)
 
 
@@ -262,3 +265,9 @@ func _cache_collapsed_list(parent: TreeItem, list: Array):
 			if item.collapsed:
 				list.append(path)
 		item = item.get_next()
+
+
+func get_selected_paths():
+	# todo multi-select
+	return [tree.get_selected().get_metadata(0)]
+	

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://addons/FileSystemView/FileSystemView.gd" type="Script" id=1]
 [ext_resource path="res://addons/FileSystemView/icons/folder_empty.svg" type="Texture" id=2]
 [ext_resource path="res://addons/FileSystemView/icons/filter_include.svg" type="Texture" id=3]
 [ext_resource path="res://addons/FileSystemView/icons/filter_exclude.svg" type="Texture" id=4]
+[ext_resource path="res://addons/FileSystemView/FileSystemView.Popup.gd" type="Script" id=5]
 
 [node name="View" type="Control"]
 anchor_right = 1.0
@@ -107,6 +108,11 @@ allow_rmb_select = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Popup" type="PopupMenu" parent="."]
+margin_right = 20.0
+margin_bottom = 20.0
+script = ExtResource( 5 )
 
 [connection signal="item_selected" from="VBox/HBox/Option" to="." method="_on_MenuButton_item_selected"]
 [connection signal="pressed" from="VBox/HBox/Config" to="." method="_on_ConfigBtn_pressed"]

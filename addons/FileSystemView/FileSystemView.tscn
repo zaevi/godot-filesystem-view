@@ -105,6 +105,7 @@ margin_right = 288.0
 margin_bottom = 364.0
 size_flags_vertical = 3
 allow_rmb_select = true
+select_mode = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -124,3 +125,5 @@ script = ExtResource( 5 )
 [connection signal="toggled" from="VBox/HBox2/HideEmpty" to="." method="_on_HideEmpty_toggled"]
 [connection signal="item_activated" from="VBox/Tree" to="." method="_on_Tree_item_activated"]
 [connection signal="item_rmb_selected" from="VBox/Tree" to="." method="_on_Tree_item_rmb_selected"]
+[connection signal="multi_selected" from="VBox/Tree" to="." method="_on_Tree_multi_selected"]
+[connection signal="id_pressed" from="Popup" to="Popup" method="_rmb_option"]

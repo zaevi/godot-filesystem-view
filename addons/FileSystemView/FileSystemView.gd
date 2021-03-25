@@ -17,6 +17,7 @@ var _is_changing = false
 
 var _cache_collapsed = {}
 
+var _deferred = false
 
 func _ready():
 	if not plugin:
@@ -80,6 +81,15 @@ func refresh_tree():
 	
 	if current_view.name and _cache_collapsed.has(current_view.name):
 		_set_folder_collapsed(tree.get_root(), false, _cache_collapsed[current_view.name])
+
+
+func _notification(what):
+	if what == NOTIFICATION_DRAG_BEGIN:
+		var dd = get_viewport().gui_get_drag_data()
+		if dd.has("type") and dd["type"] in ["files", "files_and_dirs", "resource"]:
+			tree.drop_mode_flags = Tree.DROP_MODE_INBETWEEN | Tree.DROP_MODE_ON_ITEM
+	elif what == NOTIFICATION_DRAG_END:
+		tree.drop_mode_flags = 0
 
 
 func _clean_empty_dir(current: TreeItem):
@@ -215,12 +225,21 @@ func _on_Locate_pressed():
 
 func _on_Tree_item_rmb_selected(position):
 	var paths = get_selected_paths()
-	plugin.fsd_select_item(paths[0])
-#	position += tree.rect_global_position - plugin.tree.rect_global_position
-#	plugin.tree.emit_signal("item_rmb_selected", position)
 	$Popup.fill(paths)
 	$Popup.set_position(tree.get_global_rect().position + position)
 	$Popup.popup()
+
+func _on_Tree_multi_selected(item, column, selected):
+	if _deferred:
+		return
+	_deferred = true
+	call_deferred("_update_remote_tree")
+	call_deferred("set", "_deferred", false)
+
+
+func _update_remote_tree():
+	var paths = get_selected_paths()
+	plugin.fsd_select_paths(paths)
 
 
 func _on_ApplyInclude_toggled(button_pressed):
@@ -243,8 +262,16 @@ func _on_HideEmpty_toggled(button_pressed):
 
 func get_drag_data_fw(position, from_control):
 	var paths = get_selected_paths()
-	plugin.fsd_select_item(paths[0]) # todo multi-file-drag
-	return plugin.filesystem_dock.get_drag_data_fw(get_global_mouse_position(),plugin.tree)
+	plugin.fsd_select_paths(paths)
+	return plugin.filesystem_dock.get_drag_data_fw(get_global_mouse_position(), plugin.tree)
+
+
+func can_drop_data(position, data):
+	return false # todo
+
+
+func drop_data(position, data):
+	pass # todo
 
 
 func cache_collapsed():
@@ -268,6 +295,12 @@ func _cache_collapsed_list(parent: TreeItem, list: Array):
 
 
 func get_selected_paths():
-	# todo multi-select
-	return [tree.get_selected().get_metadata(0)]
+	var paths = []
+	var item = tree.get_next_selected(null)
+	while item:
+		paths.push_back(item.get_metadata(0))
+		item = tree.get_next_selected(item)
 	
+	return paths
+	
+

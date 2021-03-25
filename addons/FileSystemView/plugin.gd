@@ -98,12 +98,23 @@ func fsd_locate_item(path: String) -> TreeItem:
 	return _fsd_locate_item(res_root, path)
 
 
-func fsd_select_item(path: String):
-	var item = fsd_locate_item(path)
+func fsd_select_paths(paths: PoolStringArray):
+	if paths.size() == 0:
+		return
+
+	var temp_item = tree.create_item(tree.get_root())
+	var _start_select = false
+	for path in paths:
+		var item = tree.create_item(temp_item)
+		item.set_metadata(0, path)
+		if _start_select:
+			item.select(0)
+		else:
+			tree.select_mode = Tree.SELECT_SINGLE
+			item.select(0)
+			tree.select_mode = Tree.SELECT_MULTI
+			_start_select = true
 	
-	# easier way to unselect all
-	tree.select_mode = Tree.SELECT_SINGLE
-	item.select(0)
-	tree.select_mode = Tree.SELECT_MULTI
-	# fix show-in-file-manager
 	tree.emit_signal("multi_selected", null, 0, true)
+	tree.get_root().call_deferred("remove_child", temp_item)
+	tree.call_deferred("update")

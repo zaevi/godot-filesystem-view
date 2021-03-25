@@ -3,6 +3,7 @@ extends PopupMenu
 
 var filesystem : EditorFileSystem
 var editor_interface : EditorInterface
+var plugin : EditorPlugin
 
 enum Menu {
 	FILE_OPEN,
@@ -33,17 +34,13 @@ enum Menu {
 }
 
 func _ready():
-	var plugin = get_parent().plugin
+	plugin = get_parent().plugin
 	if not plugin:
 		return
-	
 	editor_interface = plugin.interface
+	filesystem = plugin.filesystem
 	
 	set_hide_on_window_lose_focus(true)
-	
-	filesystem = plugin.filesystem
-	connect("id_pressed", plugin.filesystem_dock, "_tree_rmb_option")
-	connect("id_pressed", self, "_rmb_option")
 	
 
 func fill(paths: PoolStringArray):
@@ -62,37 +59,38 @@ func fill(paths: PoolStringArray):
 			all_files_scene = all_files_scene and filesystem.get_file_type(path) == "PackedScene"
 			
 	if all_files:
-		_add_item(Menu.FILE_OPEN, "Open", "Load")
+		if paths.size() == 1 or all_files_scene:
+			_add_item(Menu.FILE_OPEN, "Open", "Load")
 		if all_files_scene:
 			if paths.size() == 1:
 				_add_item(Menu.FILE_INSTANCE, "New Inherited Scene", "CreateNewSceneFrom")
 				_add_item(Menu.FSV_PLAY_SCENE, "Play Scene", "PlayScene")
 			_add_item(Menu.FILE_INSTANCE, "Instance", "Instance")
 		# todo handle other types
-		add_separator()
 		
 	# Favorite removed
 		
 	if all_files and paths.size() == 1:
+		_fix_separator()
 		_add_item(Menu.FILE_DEPENDENCIES, "Edit Dependencies...")
 		_add_item(Menu.FILE_OWNERS, "View Owners...")
-		add_separator()
 	
+	_fix_separator()
+	# currently can't get editor's shortcuts (#44307)
+	_add_item(Menu.FSV_COPY_PATHS, "Copy Path", "ActionCopy")
 	if paths[0] != "res://":
-		# currently can't get editor's shortcuts (#44307)
-		_add_item(Menu.FSV_COPY_PATHS, "Copy Path", "ActionCopy")
 		if paths.size() == 1:
 			_add_item(Menu.FILE_RENAME, "Rename...", "Rename")
 			_add_item(Menu.FILE_DUPLICATE, "Duplicate...", "Duplicate")
 		_add_item(Menu.FILE_MOVE, "Move To...", "MoveUp")
 		_add_item(Menu.FILE_REMOVE, "Move to Trash", "Remove")
-		add_separator()
 	
 	if paths.size() == 1:
+		_fix_separator()
 		_add_item(Menu.FILE_NEW_FOLDER, "New Folder...", "Folder")
-		_add_item(Menu.FILE_NEW_FOLDER, "New Scene...", "PackedScene")
-		_add_item(Menu.FILE_NEW_FOLDER, "New Script...", "Script")
-		_add_item(Menu.FILE_NEW_FOLDER, "New Resource...", "Object")
+		_add_item(Menu.FILE_NEW_SCENE, "New Scene...", "PackedScene")
+		_add_item(Menu.FILE_NEW_SCRIPT, "New Script...", "Script")
+		_add_item(Menu.FILE_NEW_RESOURCE, "New Resource...", "Object")
 		add_separator()
 		_add_item(Menu.FILE_SHOW_IN_EXPLORER, "Show in File Manager", "Filesystem")
 
@@ -103,8 +101,18 @@ func _add_item(id, label, icon = null):
 	else:
 		add_item(label, id)
 
+
+func _fix_separator():
+	if get_item_count() > 0 and not is_item_separator(get_item_count()-1):
+		add_separator()
+
+
 func _rmb_option(id):
 	var paths = get_parent().get_selected_paths()
+	
+	if id < 50:
+		plugin.fsd_select_paths(paths)
+		plugin.filesystem_dock.call("_tree_rmb_option", id)
 	
 	match id:
 		Menu.FSV_COPY_PATHS:

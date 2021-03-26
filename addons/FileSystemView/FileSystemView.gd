@@ -266,12 +266,51 @@ func get_drag_data_fw(position, from_control):
 	return plugin.filesystem_dock.get_drag_data_fw(get_global_mouse_position(), plugin.tree)
 
 
-func can_drop_data(position, data):
-	return false # todo
+func can_drop_data_fw(position, data, from_control):
+	var type = data["type"] if data.has("type") else null
+	# todo resource is not supported
+	if not type in ["files", "files_and_dirs"]:
+		return false
+	var target = _get_drag_target_folder(position)
+	if not target:
+		return false
+	
+	if type == "files_and_dirs":
+		for path in data["files"]:
+			if path.ends_with("/") and target.begins_with(path):
+				return false
+	
+	return true
 
 
-func drop_data(position, data):
-	pass # todo
+func drop_data_fw(position, data, from_control):
+	if not can_drop_data_fw(position, data, from_control):
+		return
+	
+	var target = _get_drag_target_folder(position)
+	var type = data["type"] if data.has("type") else null
+	
+	plugin.fsd_select_paths(data["files"])
+	plugin.filesystem_dock.call("_tree_rmb_option", $Popup.Menu.FILE_MOVE)
+	if plugin.filesystem_move_dialog.visible:
+		plugin.filesystem_move_dialog.hide()
+		plugin.filesystem_move_dialog.emit_signal("dir_selected", target)
+
+
+func _get_drag_target_folder(pos: Vector2):
+	var item = tree.get_item_at_position(pos)
+	var section = tree.get_drop_section_at_position(pos)
+	if item:
+		var path = item.get_metadata(0)
+		var is_folder = path.ends_with("/")
+		if is_folder and section == 0:
+			return path # drop in folder
+		elif is_folder and section != 0 and path != "res://":
+			return path.substr(0, len(path)-1).get_base_dir() # drop in folder's base dir
+		elif not is_folder:
+			return path.get_base_dir() # drop in file's base dir
+			
+	return null
 
 
 func cache_collapsed():

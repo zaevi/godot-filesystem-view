@@ -12,6 +12,7 @@ var filesystem: EditorFileSystem
 var editor_node : Node
 var filesystem_dock : Node
 var filesystem_popup : PopupMenu
+var filesystem_move_dialog: ConfirmationDialog
 var tree : Tree
 
 var views : Array
@@ -27,7 +28,9 @@ func _enter_tree():
 			tree = i.get_child(0)
 		elif i is PopupMenu:
 			filesystem_popup = i
-		if tree and filesystem_popup:
+		elif i is ConfirmationDialog and i.has_signal("dir_selected"):
+			filesystem_move_dialog = i
+		if tree and filesystem_popup and filesystem_move_dialog:
 			break
 	
 	load_views()

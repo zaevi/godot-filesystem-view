@@ -127,6 +127,8 @@ func _create_tree(parent: TreeItem, current: EditorFileSystemDirectory):
 	for i in current.get_subdir_count():
 		_create_tree(item, current.get_subdir(i))
 	
+	var previewer = plugin.get_editor_interface().get_resource_previewer()
+	
 	for i in current.get_file_count():
 		var file_name = current.get_file(i)
 		var file_path = dir_path.plus_file(file_name)
@@ -138,8 +140,8 @@ func _create_tree(parent: TreeItem, current: EditorFileSystemDirectory):
 		var file_item = tree.create_item(item)
 		file_item.set_text(0, file_name)
 		file_item.set_icon(0, _get_tree_item_icon(current, i))
-		
 		file_item.set_metadata(0, file_path)
+		previewer.queue_resource_preview(file_path, self, "_create_tree_preview_callback", file_item)
 
 
 func _get_tree_item_icon(dir: EditorFileSystemDirectory, idx: int) -> Texture:
@@ -153,6 +155,11 @@ func _get_tree_item_icon(dir: EditorFileSystemDirectory, idx: int) -> Texture:
 		else:
 			icon = get_icon("File", "EditorIcons")
 	return icon
+
+
+func _create_tree_preview_callback(path, preview, small_preview : Texture, file_item):
+	if small_preview and file_item:
+		file_item.set_icon(0, small_preview)
 
 
 func _on_MenuButton_item_selected(id):

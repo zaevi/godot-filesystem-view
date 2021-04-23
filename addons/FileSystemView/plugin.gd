@@ -73,32 +73,7 @@ func _on_ViewEditor_closed():
 
 
 func fsd_open_file(file_path: String):
-	## method EditorNode:load_resource is not bound, so use FileSystemDock
-	#	if filesystem.get_file_type(file_path) == "PackedScene":
-	#		editor_node.call("open_request", file_path)
-	#	else:
-	#		editor_node.call("load_resource", file_path) # invalid call
 	filesystem_dock.call("_select_file", file_path, false)
-
-
-func _fsd_locate_item(root: TreeItem, path: String):
-	var item : TreeItem = root.get_children()
-	while item:
-		var item_path : String = item.get_metadata(0)
-		if path == item_path:
-			return item
-		elif path.begins_with(item_path):
-			return _fsd_locate_item(item, path)
-		item = item.get_next()
-	print("can't find treepath ", path)
-	return null
-
-
-func fsd_locate_item(path: String) -> TreeItem:
-	var res_root = tree.get_root().get_children().get_next()
-	if path == "res://":
-		return res_root
-	return _fsd_locate_item(res_root, path)
 
 
 func fsd_select_paths(paths: PoolStringArray):

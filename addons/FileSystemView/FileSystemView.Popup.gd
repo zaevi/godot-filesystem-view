@@ -113,6 +113,7 @@ func _rmb_option(id):
 	if id < 50:
 		plugin.fsd_select_paths(paths)
 		plugin.filesystem_dock.call("_tree_rmb_option", id)
+		return
 	
 	match id:
 		Menu.FSV_COPY_PATHS:

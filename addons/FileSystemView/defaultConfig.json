@@ -47,15 +47,6 @@
             "hide_empty_dirs": true
         },
         {
-            "name": "C#",
-            "icon": "CSharpScript",
-            "apply_include": true,
-            "include": "*.cs",
-            "apply_exclude": false,
-            "exclude": "",
-            "hide_empty_dirs": true
-        },
-        {
             "name": "Textures",
             "icon": "Image",
             "apply_include": true,

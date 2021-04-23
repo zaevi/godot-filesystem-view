@@ -6,38 +6,47 @@ A Godot tool similar to FileSystem dock, allows you to customize filters(views) 
 
 ![demo1](https://user-images.githubusercontent.com/12966814/90251893-1f898b80-de71-11ea-9a03-49f3c1dce84f.gif)
 
+## Changes in 1.5
+
+1. (Important) Since 1.5, this plugin saves settings with json format, and you may need to update your settings manually.
+
+2. Multi-select and dragging are fully supported. You can now drag files freely.
+
+    Bugs related to `ImportDock` are also fixed.
+
+3. Remade context menu provides useful functions (more in future):
+
+    - Play selected scene
+
+    - Copy paths for multiple files
+
+4. Support for resource thumbnails.
+
 ## Install
 
-1. Install via AssetLib. Or download this repo and put `FileSystemView` folder into `YOUR_PROJECT/addons/`.
-2. Activate it at `Project -> Project Settings -> Plugins`. Now you can see a `View` dock on the left-bottom side.
+1. Install via AssetLib, or download this repo and put `FileSystemView` folder into `YOUR_PROJECT/addons/`.
+
+2. Activate it at `Project > Project Settings > Plugins`. A dock named `View` will appear on the left-bottom side.
 
 ## Usage
 
-1. In the option button above you can switch views. There are some preset views. Click the button on the right to configure views.
+The usage is basically similar to FileSystem dock.
 
-2. File Tree usage is similar to FileSystem dock (double-click to open, right-click to popup menu, drag file to scene).
+- FileSystem dock would be influenced when using this plugin.
 
-Note:
-
-- Some features are implemented by hooking FileSystemDock control, so FileSystemDock would be influenced (like file selection).
-
-- Favorites folder won't shown in this plugin.
-
-- Multi-file selection, searching and drag-to-move-files are not yet supported.
+- `Favorites` is not supported.
 
 ### Configure Views
 
-View configs are saved in `views.cfg`. If it doesn't exists, the plugin will load configs from `default_views.cfg`.
+View settings are saved in `config.json`. If it doesn't exists, the plugin will load from `defaultConfig.json`.
 
 ![demo3](https://user-images.githubusercontent.com/12966814/86586164-0f50d780-bfba-11ea-8deb-a3ece305281b.png)
 
 - `Icon` comes from `EditorIcons` of editor theme. You can preview icons by plugins such as [Editor Theme Explorer](https://godotengine.org/asset-library/asset/557) and [Editor Icons Previewer](https://godotengine.org/asset-library/asset/374)
 
-- The filter does expression match by `*` and `?` (same as `String.matchn` method), and expressions are separated by `;` .
+- Filters are separated by `;`, e.g: `*.gd;*.cs;*.vs;*.gdns`
 
-- `Exclude` can exclude some results. You may want to exclude some specific folders here.
-
-- Folders with no available files in current view can be hidden.
+- Folders with no available files can be hidden.
 
 > These options can be temporary toggled when in use.
 

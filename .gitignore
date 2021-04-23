@@ -10,4 +10,5 @@ data_*/
 
 # project ignores
 addons/FileSystemView/views.cfg
+addons/FileSystemView/config.json
 test/

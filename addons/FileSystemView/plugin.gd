@@ -1,11 +1,11 @@
-tool
+@tool
 extends EditorPlugin
 
 const PLUGIN_DIR = "res://addons/FileSystemView/"
 var View = preload("res://addons/FileSystemView/View.gd")
 
-var fsview = preload("FileSystemView.tscn").instance()
-var config_dialog = preload("ViewEditor.tscn").instance()
+var fsview = preload("FileSystemView.tscn").instantiate()
+var config_dialog = preload("ViewEditor.tscn").instantiate()
 
 var interface: EditorInterface
 var filesystem: EditorFileSystem
@@ -22,7 +22,7 @@ func _enter_tree():
 	interface = get_editor_interface()
 	filesystem = interface.get_resource_filesystem()
 	editor_node = interface.get_base_control().get_parent().get_parent()
-	filesystem_dock = interface.get_base_control().find_node("FileSystem", true, false)
+	filesystem_dock = interface.get_base_control().find_child("FileSystem", true, false)
 	for i in filesystem_dock.get_children():
 		if i is VSplitContainer:
 			tree = i.get_child(0)
@@ -36,7 +36,7 @@ func _enter_tree():
 	load_views()
 	
 	config_dialog.plugin = self
-	config_dialog.connect("closed", self, "_on_ViewEditor_closed")
+	config_dialog.connect("closed", _on_ViewEditor_closed)
 	interface.get_base_control().add_child(config_dialog)
 
 	fsview.plugin = self
@@ -55,16 +55,17 @@ func load_views():
 		if file.open(PLUGIN_DIR + "defaultConfig.json", File.READ) == OK:
 			print_debug("FileSystemView: load defaultConfig.json")
 	
-	var result = JSON.parse(file.get_as_text()).result
-	self.config = result
+	var json = JSON.new()
+	var err = json.parse(file.get_as_text())
+	self.config = json.get_data()
 	self.views = self.config.views
 
 
 func save_views():
-	var json = to_json(config)
+	var data = JSON.stringify(config)
 	var file = File.new()
 	file.open(PLUGIN_DIR + "config.json", File.WRITE)
-	file.store_string(json)
+	file.store_string(data)
 	file.close()
 
 
@@ -76,7 +77,7 @@ func fsd_open_file(file_path: String):
 	filesystem_dock.call("_select_file", file_path, false)
 
 
-func fsd_select_paths(paths: PoolStringArray):
+func fsd_select_paths(paths: PackedStringArray):
 	if paths.size() == 0:
 		return
 

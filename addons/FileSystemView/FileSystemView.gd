@@ -1,4 +1,4 @@
-tool
+@tool
 extends Control
 
 const PLUGIN_DIR = "res://addons/FileSystemView/"
@@ -7,8 +7,8 @@ var View = preload("res://addons/FileSystemView/View.gd")
 
 var plugin
 
-onready var tree : Tree = $VBox/Tree
-onready var option_btn : OptionButton = $VBox/HBox/Option
+@onready var tree : Tree = $VBox/Tree
+@onready var option_btn : OptionButton = $VBox/HBox/Option
 
 var views: Array
 var current_view
@@ -23,9 +23,9 @@ func _ready():
 	if not plugin:
 		return
 
-	$VBox/HBox/Config.icon = get_icon("Tools", "EditorIcons")
-	$VBox/HBox2/Unfold.icon = get_icon("AnimationTrackGroup", "EditorIcons")
-	$VBox/HBox2/Collapse.icon = get_icon("AnimationTrackList", "EditorIcons")
+	$VBox/HBox/Config.icon = get_theme_icon("Tools", "EditorIcons")
+	$VBox/HBox2/Unfold.icon = get_theme_icon("AnimationTrackGroup", "EditorIcons")
+	$VBox/HBox2/Collapse.icon = get_theme_icon("AnimationTrackList", "EditorIcons")
 	tree.set_drag_forwarding(self)
 	
 	views = plugin.views
@@ -35,8 +35,8 @@ func _ready():
 	option_btn.select(0)
 	_on_MenuButton_item_selected(0)
 	
-	plugin.filesystem.connect("filesystem_changed", self, "refresh_tree")
-	plugin.config_dialog.connect("closed", self, "_on_ViewEditor_closed")
+	plugin.filesystem.connect("filesystem_changed", refresh_tree)
+	plugin.config_dialog.connect("closed", _on_ViewEditor_closed)
 
 
 func change_view(view):
@@ -49,9 +49,9 @@ func change_view(view):
 	current_view.apply_include = view.apply_include
 	current_view.apply_exclude = view.apply_exclude
 	_is_changing = true
-	$VBox/HBox2/HideEmpty.pressed = view.hide_empty_dirs
-	$VBox/HBox2/ApplyInclude.pressed = view.apply_include
-	$VBox/HBox2/ApplyExclude.pressed = view.apply_exclude
+	$VBox/HBox2/HideEmpty.set_pressed(view.hide_empty_dirs)
+	$VBox/HBox2/ApplyInclude.set_pressed(view.apply_include)
+	$VBox/HBox2/ApplyExclude.set_pressed(view.apply_exclude)
 	_is_changing = false
 	tree.clear()
 	refresh_tree()
@@ -63,8 +63,8 @@ func update_view_list():
 	var id = 0
 	for view in views:
 		menu.add_item(view.name, id)
-		if view.icon != "" and has_icon(view.icon, "EditorIcons"):
-			menu.set_item_icon(id, get_icon(view.icon, "EditorIcons"))
+		if view.icon != "" and has_theme_icon(view.icon, "EditorIcons"):
+			menu.set_item_icon(id, get_theme_icon(view.icon, "EditorIcons"))
 		id += 1
 
 
@@ -95,8 +95,8 @@ func _notification(what):
 func _clean_empty_dir(current: TreeItem):
 	var should_clean = true
 	
-	var item: TreeItem = current.get_children()
-	while item:
+	var items: Array[TreeItem] = current.get_children()
+	for item in items:
 		var path : String = item.get_metadata(0)
 		if path.ends_with("/"):
 			if _clean_empty_dir(item):
@@ -105,7 +105,7 @@ func _clean_empty_dir(current: TreeItem):
 				should_clean = false
 		else:
 			return false
-		item = item.get_next()
+		# item = item.get_next()
 		
 	return should_clean
 
@@ -118,8 +118,8 @@ func _create_tree(parent: TreeItem, current: EditorFileSystemDirectory):
 		
 	item.set_text(0, dname)
 	item.set_selectable(0, true)
-	item.set_icon(0, get_icon("Folder", "EditorIcons"));
-	item.set_icon_modulate(0, tree.get_color("folder_icon_modulate", "FileDialog"));
+	item.set_icon(0, get_theme_icon("Folder", "EditorIcons"));
+	item.set_icon_modulate(0, tree.get_theme_color("folder_icon_modulate", "FileDialog"));
 	
 	var dir_path = current.get_path()
 	item.set_metadata(0, dir_path)
@@ -131,7 +131,7 @@ func _create_tree(parent: TreeItem, current: EditorFileSystemDirectory):
 	
 	for i in current.get_file_count():
 		var file_name = current.get_file(i)
-		var file_path = dir_path.plus_file(file_name)
+		var file_path = dir_path.path_join(file_name)
 		
 		if current_view and not current_view.is_match(file_path):
 			continue
@@ -147,13 +147,13 @@ func _create_tree(parent: TreeItem, current: EditorFileSystemDirectory):
 func _get_tree_item_icon(dir: EditorFileSystemDirectory, idx: int) -> Texture:
 	var icon : Texture
 	if not dir.get_file_import_is_valid(idx):
-		icon = get_icon("ImportFail", "EditorIcons")
+		icon = get_theme_icon("ImportFail", "EditorIcons")
 	else:
 		var file_type = dir.get_file_type(idx)
-		if has_icon(file_type, "EditorIcons"):
-			icon = get_icon(file_type, "EditorIcons")
+		if has_theme_icon(file_type, "EditorIcons"):
+			icon = get_theme_icon(file_type, "EditorIcons")
 		else:
-			icon = get_icon("File", "EditorIcons")
+			icon = get_theme_icon("File", "EditorIcons")
 	return icon
 
 
@@ -203,9 +203,9 @@ func _on_ViewEditor_closed():
 
 
 func _set_folder_collapsed(current:TreeItem, collapsed:bool, excepts = null):
-	var item: TreeItem = current.get_children()
+	var items: Array[TreeItem] = current.get_children()
 	
-	while item:
+	for item in items:
 		var path : String = item.get_metadata(0)
 		if path.ends_with("/"):
 			_set_folder_collapsed(item, collapsed, excepts)
@@ -213,7 +213,7 @@ func _set_folder_collapsed(current:TreeItem, collapsed:bool, excepts = null):
 				item.collapsed = not collapsed
 			else:
 				item.collapsed = collapsed
-		item = item.get_next()
+		# item = item.get_next()
 
 
 func _on_Unfold_pressed():
@@ -230,7 +230,7 @@ func _on_Locate_pressed():
 	pass
 
 
-func _on_Tree_item_rmb_selected(position):
+func _on_Tree_item_rmb_selected(position, button):
 	var paths = get_selected_paths()
 	$Popup.fill(paths)
 	$Popup.set_position(tree.get_global_rect().position + position)
@@ -322,7 +322,7 @@ func _get_drag_target_folder(pos: Vector2):
 
 func cache_collapsed():
 	var root = tree.get_root()	
-	if not current_view.name or not root:
+	if current_view.name == null or not root:
 		return
 	var list = []
 	_cache_collapsed_list(root, list)
@@ -330,14 +330,14 @@ func cache_collapsed():
 
 
 func _cache_collapsed_list(parent: TreeItem, list: Array):
-	var item: TreeItem = parent.get_children()
-	while item: 
+	var items: Array[TreeItem] = parent.get_children()
+	for item in items:
 		var path : String = item.get_metadata(0)
 		if path.ends_with("/"):
 			_cache_collapsed_list(item, list)
 			if item.collapsed:
 				list.append(path)
-		item = item.get_next()
+		# item = item.get_next()
 
 
 func get_selected_paths():

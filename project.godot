@@ -6,9 +6,10 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
+config_version=5
 
 [application]
 
 config/name="FileSystemView"
+config/features=PackedStringArray("4.0")
 config/icon="res://images/icon.png"

@@ -119,7 +119,7 @@ func _create_tree(parent: TreeItem, current: EditorFileSystemDirectory):
 	item.set_text(0, dname)
 	item.set_selectable(0, true)
 	item.set_icon(0, get_theme_icon("Folder", "EditorIcons"));
-	item.set_icon_modulate(0, tree.get_theme_color("folder_icon_modulate", "FileDialog"));
+	item.set_icon_modulate(0, tree.get_theme_color("folder_icon_color", "FileDialog"));
 	
 	var dir_path = current.get_path()
 	item.set_metadata(0, dir_path)
@@ -231,10 +231,11 @@ func _on_Locate_pressed():
 
 
 func _on_Tree_item_rmb_selected(position, button):
-	var paths = get_selected_paths()
-	$Popup.fill(paths)
-	$Popup.set_position(tree.get_global_rect().position + position)
-	$Popup.popup()
+	if button == MOUSE_BUTTON_RIGHT:
+		var paths = get_selected_paths()
+		$Popup.fill(paths)
+		$Popup.set_position(tree.get_global_rect().position + position)
+		$Popup.popup()
 
 func _on_Tree_multi_selected(item, column, selected):
 	if _deferred:

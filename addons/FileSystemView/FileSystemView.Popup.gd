@@ -5,6 +5,8 @@ var filesystem : EditorFileSystem
 var editor_interface : EditorInterface
 var plugin : EditorPlugin
 
+var _tree_rmb_option : Callable
+
 enum Menu {
 	FILE_OPEN,
 	FILE_INHERIT,
@@ -25,7 +27,9 @@ enum Menu {
 	FILE_NEW_SCENE,
 	FILE_SHOW_IN_EXPLORER,
 	FILE_COPY_PATH,
+	FILE_COPY_UID,
 	FILE_NEW_RESOURCE,
+	FILE_NEW_TEXTFILE,
 	FOLDER_EXPAND_ALL,
 	FOLDER_COLLAPSE_ALL,
 	#
@@ -39,6 +43,13 @@ func _ready():
 		return
 	editor_interface = plugin.interface
 	filesystem = plugin.filesystem
+	
+	# get callable `FileSystemDock::_tree_rmb_option`
+	for connection in plugin.filesystem_popup.get_signal_connection_list("id_pressed"):
+		var callable : Callable = connection.callable
+		if str(callable) == "FileSystemDock::_tree_rmb_option":
+			_tree_rmb_option = callable
+	assert(_tree_rmb_option, "can't find callable `_tree_rmb_option`")
 	
 	# set_hide_on_window_lose_focus(true)
 	
@@ -112,7 +123,7 @@ func _rmb_option(id):
 	
 	if id < 50:
 		plugin.fsd_select_paths(paths)
-		plugin.filesystem_dock.call("_tree_rmb_option", id)
+		_tree_rmb_option.call(id)
 		return
 	
 	match id:
@@ -120,7 +131,7 @@ func _rmb_option(id):
 			var file_paths = ""
 			for path in paths:
 				file_paths += path + "\n"
-			OS.clipboard = file_paths.trim_suffix("\n")
+			DisplayServer.clipboard_set(file_paths.trim_suffix("\n"))
 		Menu.FSV_PLAY_SCENE:
 			var path = paths[0]
 			editor_interface.play_custom_scene(path)

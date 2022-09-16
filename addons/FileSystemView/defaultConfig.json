@@ -57,7 +57,7 @@
         },
         {
             "name": "Sounds",
-            "icon": "AudioStreamSample",
+            "icon": "AudioStreamWAV",
             "apply_include": true,
             "include": "*.wav;*.ogg;*.mp3",
             "apply_exclude": false,

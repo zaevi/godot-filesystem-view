@@ -10,7 +10,7 @@ var config_dialog = preload("ViewEditor.tscn").instantiate()
 var interface: EditorInterface
 var filesystem: EditorFileSystem
 var editor_node : Node
-var filesystem_dock : Node
+var filesystem_dock : FileSystemDock
 var filesystem_popup : PopupMenu
 var filesystem_move_dialog: ConfirmationDialog
 var tree : Tree
@@ -22,7 +22,7 @@ func _enter_tree():
 	interface = get_editor_interface()
 	filesystem = interface.get_resource_filesystem()
 	editor_node = interface.get_base_control().get_parent().get_parent()
-	filesystem_dock = interface.get_base_control().find_child("FileSystem", true, false)
+	filesystem_dock = interface.get_file_system_dock()
 	for i in filesystem_dock.get_children():
 		if i is VSplitContainer:
 			tree = i.get_child(0)
@@ -96,4 +96,4 @@ func fsd_select_paths(paths: PackedStringArray):
 	
 	tree.emit_signal("multi_selected", null, 0, true)
 	tree.get_root().call_deferred("remove_child", temp_item)
-	tree.call_deferred("update")
+	tree.call_deferred("queue_redraw") 

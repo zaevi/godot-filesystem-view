@@ -1,4 +1,4 @@
-tool
+@tool
 extends PopupMenu
 
 var filesystem : EditorFileSystem
@@ -40,10 +40,10 @@ func _ready():
 	editor_interface = plugin.interface
 	filesystem = plugin.filesystem
 	
-	set_hide_on_window_lose_focus(true)
+	# set_hide_on_window_lose_focus(true)
 	
 
-func fill(paths: PoolStringArray):
+func fill(paths: PackedStringArray): 
 	clear()
 	set_size(Vector2(1,1))
 	
@@ -95,9 +95,9 @@ func fill(paths: PoolStringArray):
 		_add_item(Menu.FILE_SHOW_IN_EXPLORER, "Show in File Manager", "Filesystem")
 
 
-func _add_item(id, label, icon = null):
-	if icon:
-		add_icon_item(get_icon(icon, "EditorIcons"), label, id)
+func _add_item(id, label, icon = ""):
+	if icon != "":
+		add_icon_item(get_theme_icon(icon, "EditorIcons"), label, id)
 	else:
 		add_item(label, id)
 

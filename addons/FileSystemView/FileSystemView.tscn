@@ -1,119 +1,111 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://b8w0x221pxua3"]
 
-[ext_resource path="res://addons/FileSystemView/FileSystemView.gd" type="Script" id=1]
-[ext_resource path="res://addons/FileSystemView/icons/folder_empty.svg" type="Texture" id=2]
-[ext_resource path="res://addons/FileSystemView/icons/filter_include.svg" type="Texture" id=3]
-[ext_resource path="res://addons/FileSystemView/icons/filter_exclude.svg" type="Texture" id=4]
-[ext_resource path="res://addons/FileSystemView/FileSystemView.Popup.gd" type="Script" id=5]
+[ext_resource type="Script" path="res://addons/FileSystemView/FileSystemView.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://t1e8tppf6dbo" path="res://addons/FileSystemView/icons/folder_empty.svg" id="2"]
+[ext_resource type="Texture2D" uid="uid://cearmldmd07eb" path="res://addons/FileSystemView/icons/filter_include.svg" id="3"]
+[ext_resource type="Texture2D" uid="uid://drmvs0cnl2eiq" path="res://addons/FileSystemView/icons/filter_exclude.svg" id="4"]
+[ext_resource type="Script" path="res://addons/FileSystemView/FileSystemView.Popup.gd" id="5"]
 
 [node name="View" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_right = -736.0
-margin_bottom = -236.0
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource("1")
 
 [node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBox" type="HBoxContainer" parent="VBox"]
-margin_right = 288.0
-margin_bottom = 20.0
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 20.0
 
 [node name="Option" type="OptionButton" parent="VBox/HBox"]
-margin_right = 272.0
-margin_bottom = 20.0
+layout_mode = 2
+offset_right = 1140.0
+offset_bottom = 20.0
 size_flags_horizontal = 3
 clip_text = true
 expand_icon = true
 
 [node name="Config" type="Button" parent="VBox/HBox"]
-margin_left = 276.0
-margin_right = 288.0
-margin_bottom = 20.0
-hint_tooltip = "Config Views"
+layout_mode = 2
+offset_left = 1144.0
+offset_right = 1152.0
+offset_bottom = 20.0
 
 [node name="HBox2" type="HBoxContainer" parent="VBox"]
-margin_top = 24.0
-margin_right = 288.0
-margin_bottom = 46.0
+layout_mode = 2
+offset_top = 24.0
+offset_right = 1152.0
+offset_bottom = 48.0
 
 [node name="Collapse" type="Button" parent="VBox/HBox2"]
-margin_right = 12.0
-margin_bottom = 22.0
-hint_tooltip = "Collapse All"
+layout_mode = 2
+offset_right = 8.0
+offset_bottom = 24.0
 
 [node name="Unfold" type="Button" parent="VBox/HBox2"]
-margin_left = 16.0
-margin_right = 28.0
-margin_bottom = 22.0
-hint_tooltip = "Unfold All"
+layout_mode = 2
+offset_left = 12.0
+offset_right = 20.0
+offset_bottom = 24.0
 
 [node name="VSeparator" type="VSeparator" parent="VBox/HBox2"]
 visible = false
-margin_left = 32.0
-margin_right = 36.0
-margin_bottom = 42.0
+layout_mode = 2
 
 [node name="Locate" type="Button" parent="VBox/HBox2"]
 visible = false
-margin_left = 32.0
-margin_right = 44.0
-margin_bottom = 42.0
+layout_mode = 2
 
 [node name="VSeparator2" type="VSeparator" parent="VBox/HBox2"]
-modulate = Color( 1, 1, 1, 0 )
-margin_left = 32.0
-margin_right = 192.0
-margin_bottom = 22.0
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+offset_left = 24.0
+offset_right = 1068.0
+offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ApplyInclude" type="Button" parent="VBox/HBox2"]
-margin_left = 196.0
-margin_right = 224.0
-margin_bottom = 22.0
-hint_tooltip = "Apply Include"
+layout_mode = 2
+offset_left = 1072.0
+offset_right = 1096.0
+offset_bottom = 24.0
 toggle_mode = true
-icon = ExtResource( 3 )
+icon = ExtResource("3")
 
 [node name="ApplyExclude" type="Button" parent="VBox/HBox2"]
-margin_left = 228.0
-margin_right = 256.0
-margin_bottom = 22.0
-hint_tooltip = "Apply Exclude"
+layout_mode = 2
+offset_left = 1100.0
+offset_right = 1124.0
+offset_bottom = 24.0
 toggle_mode = true
-icon = ExtResource( 4 )
+icon = ExtResource("4")
 
 [node name="HideEmpty" type="Button" parent="VBox/HBox2"]
-margin_left = 260.0
-margin_right = 288.0
-margin_bottom = 22.0
-hint_tooltip = "Hide Empty Folder"
+layout_mode = 2
+offset_left = 1128.0
+offset_right = 1152.0
+offset_bottom = 24.0
 toggle_mode = true
-icon = ExtResource( 2 )
+icon = ExtResource("2")
 
 [node name="Tree" type="Tree" parent="VBox"]
-margin_top = 50.0
-margin_right = 288.0
-margin_bottom = 364.0
+layout_mode = 2
+offset_top = 52.0
+offset_right = 1152.0
+offset_bottom = 648.0
 size_flags_vertical = 3
 allow_rmb_select = true
 select_mode = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Popup" type="PopupMenu" parent="."]
-margin_right = 20.0
-margin_bottom = 20.0
-script = ExtResource( 5 )
+script = ExtResource("5")
 
 [connection signal="item_selected" from="VBox/HBox/Option" to="." method="_on_MenuButton_item_selected"]
 [connection signal="pressed" from="VBox/HBox/Config" to="." method="_on_ConfigBtn_pressed"]
@@ -124,6 +116,6 @@ script = ExtResource( 5 )
 [connection signal="toggled" from="VBox/HBox2/ApplyExclude" to="." method="_on_ApplyExclude_toggled"]
 [connection signal="toggled" from="VBox/HBox2/HideEmpty" to="." method="_on_HideEmpty_toggled"]
 [connection signal="item_activated" from="VBox/Tree" to="." method="_on_Tree_item_activated"]
-[connection signal="item_rmb_selected" from="VBox/Tree" to="." method="_on_Tree_item_rmb_selected"]
+[connection signal="item_mouse_selected" from="VBox/Tree" to="." method="_on_Tree_item_rmb_selected"]
 [connection signal="multi_selected" from="VBox/Tree" to="." method="_on_Tree_multi_selected"]
 [connection signal="id_pressed" from="Popup" to="Popup" method="_rmb_option"]

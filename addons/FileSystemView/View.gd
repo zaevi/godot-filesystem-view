@@ -1,9 +1,9 @@
-extends Reference
+extends RefCounted
 
 var name : String = ""
 var icon : String = ""
-var include: String = "" setget _set_include
-var exclude: String = "" setget _set_exclude
+var include: String = "": set = _set_include
+var exclude: String = "": set = _set_exclude
 var hide_empty_dirs: bool = true
 var apply_include: bool = true
 var apply_exclude: bool

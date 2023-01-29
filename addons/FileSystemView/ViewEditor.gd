@@ -18,8 +18,8 @@ var views : Array
 var current_view
 
 func _init():
-	connect("cancelled", _on_ViewEditor_closed)
-	connect("confirmed", _on_ViewEditor_closed)
+	canceled.connect(_on_ViewEditor_closed)
+	confirmed.connect(_on_ViewEditor_closed)
 
 
 func _ready():
@@ -106,4 +106,4 @@ func _on_Icon_text_changed(new_text):
 func _on_ViewEditor_closed():
 	save_current()
 	update_view_list()
-	emit_signal("closed")
+	closed.emit()

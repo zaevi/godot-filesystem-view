@@ -1,9 +1,7 @@
 @tool
 extends Control
 
-const PLUGIN_DIR = "res://addons/FileSystemView/"
-
-var View = preload("res://addons/FileSystemView/View.gd")
+var View = preload("./View.gd")
 
 var plugin
 
@@ -26,7 +24,7 @@ func _ready():
 	$VBox/HBox/Config.icon = get_theme_icon("Tools", "EditorIcons")
 	$VBox/HBox2/Unfold.icon = get_theme_icon("AnimationTrackGroup", "EditorIcons")
 	$VBox/HBox2/Collapse.icon = get_theme_icon("AnimationTrackList", "EditorIcons")
-	tree.set_drag_forwarding(self)
+	# tree.set_drag_forwarding(get_drag_data_fw, can_drop_data_fw, drop_data_fw) # TODO drag doesn't work
 	
 	views = plugin.views
 	current_view = View.new()
@@ -34,9 +32,8 @@ func _ready():
 	
 	option_btn.select(0)
 	_on_MenuButton_item_selected(0)
-	
-	plugin.filesystem.connect("filesystem_changed", refresh_tree)
-	plugin.config_dialog.connect("closed", _on_ViewEditor_closed)
+	plugin.filesystem.filesystem_changed.connect(refresh_tree)
+	plugin.config_dialog.closed.connect(_on_ViewEditor_closed)
 
 
 func change_view(view):
@@ -234,15 +231,16 @@ func _on_Tree_item_rmb_selected(position, button):
 	if button == MOUSE_BUTTON_RIGHT:
 		var paths = get_selected_paths()
 		$Popup.fill(paths)
-		$Popup.set_position(tree.get_global_rect().position + position)
+		$Popup.position = tree.get_screen_position() + position
+		$Popup.reset_size()
 		$Popup.popup()
 
 func _on_Tree_multi_selected(item, column, selected):
 	if _deferred:
 		return
 	_deferred = true
-	call_deferred("_update_remote_tree")
-	call_deferred("set", "_deferred", false)
+	_update_remote_tree.call_deferred()
+	set_deferred("_deferred", false)
 
 
 func _update_remote_tree():
@@ -268,15 +266,17 @@ func _on_HideEmpty_toggled(button_pressed):
 		refresh_tree()
 
 
-func get_drag_data_fw(position, from_control):
+func get_drag_data_fw(position):
 	var paths = get_selected_paths()
 	plugin.fsd_select_paths(paths)
-	return plugin.filesystem_dock.get_drag_data_fw(get_global_mouse_position(), plugin.tree)
+	# TODO FileSystemDock::get_drag_data_fw cannot use now
+	# return plugin.filesystem_dock.get_drag_data_fw(get_global_mouse_position(), plugin.tree)
 
 
-func can_drop_data_fw(position, data, from_control):
+
+func can_drop_data_fw(position, data):
 	var type = data["type"] if data.has("type") else null
-	# todo resource is not supported
+	# TODO resource is not supported
 	if not type in ["files", "files_and_dirs"]:
 		return false
 	var target = _get_drag_target_folder(position)
@@ -291,10 +291,7 @@ func can_drop_data_fw(position, data, from_control):
 	return true
 
 
-func drop_data_fw(position, data, from_control):
-	if not can_drop_data_fw(position, data, from_control):
-		return
-	
+func drop_data_fw(position, data):
 	var target = _get_drag_target_folder(position)
 	var type = data["type"] if data.has("type") else null
 	

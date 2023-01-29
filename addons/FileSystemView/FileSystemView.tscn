@@ -25,39 +25,24 @@ grow_vertical = 2
 
 [node name="HBox" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
-offset_right = 1152.0
-offset_bottom = 20.0
 
 [node name="Option" type="OptionButton" parent="VBox/HBox"]
 layout_mode = 2
-offset_right = 1140.0
-offset_bottom = 20.0
 size_flags_horizontal = 3
 clip_text = true
 expand_icon = true
 
 [node name="Config" type="Button" parent="VBox/HBox"]
 layout_mode = 2
-offset_left = 1144.0
-offset_right = 1152.0
-offset_bottom = 20.0
 
 [node name="HBox2" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
-offset_top = 24.0
-offset_right = 1152.0
-offset_bottom = 48.0
 
 [node name="Collapse" type="Button" parent="VBox/HBox2"]
 layout_mode = 2
-offset_right = 8.0
-offset_bottom = 24.0
 
 [node name="Unfold" type="Button" parent="VBox/HBox2"]
 layout_mode = 2
-offset_left = 12.0
-offset_right = 20.0
-offset_bottom = 24.0
 
 [node name="VSeparator" type="VSeparator" parent="VBox/HBox2"]
 visible = false
@@ -70,40 +55,25 @@ layout_mode = 2
 [node name="VSeparator2" type="VSeparator" parent="VBox/HBox2"]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
-offset_left = 24.0
-offset_right = 1068.0
-offset_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="ApplyInclude" type="Button" parent="VBox/HBox2"]
 layout_mode = 2
-offset_left = 1072.0
-offset_right = 1096.0
-offset_bottom = 24.0
 toggle_mode = true
 icon = ExtResource("3")
 
 [node name="ApplyExclude" type="Button" parent="VBox/HBox2"]
 layout_mode = 2
-offset_left = 1100.0
-offset_right = 1124.0
-offset_bottom = 24.0
 toggle_mode = true
 icon = ExtResource("4")
 
 [node name="HideEmpty" type="Button" parent="VBox/HBox2"]
 layout_mode = 2
-offset_left = 1128.0
-offset_right = 1152.0
-offset_bottom = 24.0
 toggle_mode = true
 icon = ExtResource("2")
 
 [node name="Tree" type="Tree" parent="VBox"]
 layout_mode = 2
-offset_top = 52.0
-offset_right = 1152.0
-offset_bottom = 648.0
 size_flags_vertical = 3
 allow_rmb_select = true
 select_mode = 2

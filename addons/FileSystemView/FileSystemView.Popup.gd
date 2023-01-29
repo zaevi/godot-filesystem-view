@@ -7,11 +7,13 @@ var plugin : EditorPlugin
 
 var _tree_rmb_option : Callable
 
+var new_menu : PopupMenu
+
 enum Menu {
 	FILE_OPEN,
 	FILE_INHERIT,
 	FILE_MAIN_SCENE,
-	FILE_INSTANCE,
+	FILE_INSTANTIATE,
 	FILE_ADD_FAVORITE,
 	FILE_REMOVE_FAVORITE,
 	FILE_DEPENDENCIES,
@@ -26,6 +28,7 @@ enum Menu {
 	FILE_NEW_SCRIPT,
 	FILE_NEW_SCENE,
 	FILE_SHOW_IN_EXPLORER,
+	FILE_OPEN_EXTERNAL,
 	FILE_COPY_PATH,
 	FILE_COPY_UID,
 	FILE_NEW_RESOURCE,
@@ -49,6 +52,7 @@ func _ready():
 		var callable : Callable = connection.callable
 		if str(callable) == "FileSystemDock::_tree_rmb_option":
 			_tree_rmb_option = callable
+			break
 	assert(_tree_rmb_option, "can't find callable `_tree_rmb_option`")
 	
 	# set_hide_on_window_lose_focus(true)
@@ -74,10 +78,10 @@ func fill(paths: PackedStringArray):
 			_add_item(Menu.FILE_OPEN, "Open", "Load")
 		if all_files_scene:
 			if paths.size() == 1:
-				_add_item(Menu.FILE_INSTANCE, "New Inherited Scene", "CreateNewSceneFrom")
+				_add_item(Menu.FILE_INHERIT, "New Inherited Scene", "CreateNewSceneFrom")
 				_add_item(Menu.FSV_PLAY_SCENE, "Play Scene", "PlayScene")
-			_add_item(Menu.FILE_INSTANCE, "Instance", "Instance")
-		# todo handle other types
+			_add_item(Menu.FILE_INSTANTIATE, "Instance", "Instance")
+		# TODO handle other types
 		
 	# Favorite removed
 		
@@ -98,19 +102,29 @@ func fill(paths: PackedStringArray):
 	
 	if paths.size() == 1:
 		_fix_separator()
-		_add_item(Menu.FILE_NEW_FOLDER, "New Folder...", "Folder")
-		_add_item(Menu.FILE_NEW_SCENE, "New Scene...", "PackedScene")
-		_add_item(Menu.FILE_NEW_SCRIPT, "New Script...", "Script")
-		_add_item(Menu.FILE_NEW_RESOURCE, "New Resource...", "Object")
+		if not new_menu:
+			new_menu = PopupMenu.new()
+			new_menu.name = "New"
+			new_menu.id_pressed.connect(_rmb_option)
+			_add_item(Menu.FILE_NEW_FOLDER, "Folder...", "Folder", new_menu)
+			_add_item(Menu.FILE_NEW_SCENE, "Scene...", "PackedScene", new_menu)
+			_add_item(Menu.FILE_NEW_SCRIPT, "Script...", "Script", new_menu)
+			_add_item(Menu.FILE_NEW_RESOURCE, "Resource...", "Object", new_menu)
+			_add_item(Menu.FILE_NEW_TEXTFILE, "TextFile...", "TextFile", new_menu)
+			add_child(new_menu)
+		add_submenu_item("New", "New")
 		add_separator()
 		_add_item(Menu.FILE_SHOW_IN_EXPLORER, "Show in File Manager", "Filesystem")
+		if all_files:
+			_add_item(Menu.FILE_OPEN_EXTERNAL, "Open in External Program", "ExternalLink")
 
-
-func _add_item(id, label, icon = ""):
+func _add_item(id, label, icon = "", popup = null):
+	if not popup:
+		popup = self
 	if icon != "":
-		add_icon_item(get_theme_icon(icon, "EditorIcons"), label, id)
+		popup.add_icon_item(get_theme_icon(icon, "EditorIcons"), label, id)
 	else:
-		add_item(label, id)
+		popup.add_item(label, id)
 
 
 func _fix_separator():

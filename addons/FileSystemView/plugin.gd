@@ -2,7 +2,7 @@
 extends EditorPlugin
 
 const PLUGIN_DIR = "res://addons/FileSystemView/"
-var View = preload("res://addons/FileSystemView/View.gd")
+var View = preload("View.gd")
 
 var fsview = preload("FileSystemView.tscn").instantiate()
 var config_dialog = preload("ViewEditor.tscn").instantiate()
@@ -50,23 +50,24 @@ func _exit_tree():
 
 
 func load_views():
-	var file = File.new()
-	if file.open(PLUGIN_DIR + "config.json", File.READ) != OK:
-		if file.open(PLUGIN_DIR + "defaultConfig.json", File.READ) == OK:
-			print_debug("FileSystemView: load defaultConfig.json")
+	var file = FileAccess.open(PLUGIN_DIR + "config.json", FileAccess.READ)
+	if not file:
+		file = FileAccess.open(PLUGIN_DIR + "defaultConfig.json", FileAccess.READ)
+		assert(file, str(FileAccess.get_open_error()))
+		print_debug("FileSystemView: load defaultConfig.json")
 	
-	var json = JSON.new()
-	var err = json.parse(file.get_as_text())
-	self.config = json.get_data()
+	var config = JSON.parse_string(file.get_as_text())
+	assert(config is Dictionary)
+	self.config = config
 	self.views = self.config.views
 
 
 func save_views():
 	var data = JSON.stringify(config)
-	var file = File.new()
-	file.open(PLUGIN_DIR + "config.json", File.WRITE)
+	var file = FileAccess.open(PLUGIN_DIR + "config.json", FileAccess.WRITE)
+	assert(file, str(FileAccess.get_open_error()))
 	file.store_string(data)
-	file.close()
+	file = null
 
 
 func _on_ViewEditor_closed():
@@ -94,6 +95,7 @@ func fsd_select_paths(paths: PackedStringArray):
 			tree.select_mode = Tree.SELECT_MULTI
 			_start_select = true
 	
-	tree.emit_signal("multi_selected", null, 0, true)
-	tree.get_root().call_deferred("remove_child", temp_item)
-	tree.call_deferred("queue_redraw") 
+	tree.multi_selected.emit(null, 0, true)
+	tree.get_root().remove_child.call_deferred(temp_item)
+	tree.queue_redraw.call_deferred()
+ 

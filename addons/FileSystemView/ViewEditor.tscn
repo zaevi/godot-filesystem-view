@@ -22,7 +22,6 @@ layout_mode = 2
 
 [node name="Control" type="Control" parent="HBox"]
 layout_mode = 2
-anchors_preset = 0
 
 [node name="Grid" type="GridContainer" parent="HBox"]
 layout_mode = 2

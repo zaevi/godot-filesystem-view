@@ -24,17 +24,18 @@ enum Menu {
 	FILE_DUPLICATE,
 	FILE_REIMPORT,
 	FILE_INFO,
-	FILE_NEW_FOLDER,
-	FILE_NEW_SCRIPT,
-	FILE_NEW_SCENE,
+	FILE_NEW,
 	FILE_SHOW_IN_EXPLORER,
 	FILE_OPEN_EXTERNAL,
 	FILE_COPY_PATH,
 	FILE_COPY_UID,
-	FILE_NEW_RESOURCE,
-	FILE_NEW_TEXTFILE,
 	FOLDER_EXPAND_ALL,
 	FOLDER_COLLAPSE_ALL,
+	FILE_NEW_RESOURCE,
+	FILE_NEW_TEXTFILE,
+	FILE_NEW_FOLDER,
+	FILE_NEW_SCRIPT,
+	FILE_NEW_SCENE,
 	#
 	FSV_PLAY_SCENE = 50,
 	FSV_COPY_PATHS
@@ -91,14 +92,14 @@ func fill(paths: PackedStringArray):
 		_add_item(Menu.FILE_OWNERS, "View Owners...")
 	
 	_fix_separator()
-	# currently can't get editor's shortcuts (#44307)
+	# TODO waiting for editor's shortcuts (#58585)
 	_add_item(Menu.FSV_COPY_PATHS, "Copy Path", "ActionCopy")
 	if paths[0] != "res://":
 		if paths.size() == 1:
 			_add_item(Menu.FILE_RENAME, "Rename...", "Rename")
 			_add_item(Menu.FILE_DUPLICATE, "Duplicate...", "Duplicate")
 		_add_item(Menu.FILE_MOVE, "Move To...", "MoveUp")
-		_add_item(Menu.FILE_REMOVE, "Move to Trash", "Remove")
+		_add_item(Menu.FILE_REMOVE, "Remove", "Remove")
 	
 	if paths.size() == 1:
 		_fix_separator()
@@ -117,6 +118,7 @@ func fill(paths: PackedStringArray):
 		_add_item(Menu.FILE_SHOW_IN_EXPLORER, "Show in File Manager", "Filesystem")
 		if all_files:
 			_add_item(Menu.FILE_OPEN_EXTERNAL, "Open in External Program", "ExternalLink")
+
 
 func _add_item(id, label, icon = "", popup = null):
 	if not popup:

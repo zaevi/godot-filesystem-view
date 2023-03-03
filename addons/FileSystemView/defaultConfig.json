@@ -23,7 +23,16 @@
             "name": "Scenes",
             "icon": "PackedScene",
             "apply_include": true,
-            "include": "*.tscn",
+            "include": "*.tscn;*.scn",
+            "apply_exclude": false,
+            "exclude": "",
+            "hide_empty_dirs": true
+        },
+        {
+            "name": "3D Scenes",
+            "icon": "PackedScene",
+            "apply_include": true,
+            "include": "*.dae;*.obj;*.escn;*.gltf;*.glb;*.fbx",
             "apply_exclude": false,
             "exclude": "",
             "hide_empty_dirs": true
@@ -41,7 +50,7 @@
             "name": "My Scripts",
             "icon": "Script",
             "apply_include": true,
-            "include": "*.gd;*.cs;*.vs;*.gdns",
+            "include": "*.gd;*.cs;*.gdns",
             "apply_exclude": true,
             "exclude": "addons/*",
             "hide_empty_dirs": true
@@ -50,7 +59,7 @@
             "name": "Textures",
             "icon": "Image",
             "apply_include": true,
-            "include": "*.bmp;*.jpg;*.jpeg;*.png;*.tga;*.svg;*.svgz;*.webp",
+            "include": "*.bmp;*.jpg;*.jpeg;*.png;*.tga;*.svg;*.svgz;*.webp;*.hdr;*.dds",
             "apply_exclude": false,
             "exclude": "addons/*",
             "hide_empty_dirs": true

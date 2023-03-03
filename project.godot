@@ -13,3 +13,15 @@ config_version=5
 config/name="FileSystemView"
 config/features=PackedStringArray("4.0")
 config/icon="res://images/icon.png"
+
+[debug]
+
+gdscript/warnings/exclude_addons=false
+
+[dotnet]
+
+project/assembly_name="FileSystemView"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/FileSystemView/plugin.cfg")

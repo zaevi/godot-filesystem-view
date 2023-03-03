@@ -1,12 +1,14 @@
 @tool
 extends Control
 
-var View = preload("./View.gd")
+const View = preload("./View.gd")
+const FsvPopup = preload("./FileSystemView.Popup.gd")
 
 var plugin
 
 @onready var tree : Tree = $VBox/Tree
 @onready var option_btn : OptionButton = $VBox/HBox/Option
+@onready var popup : FsvPopup = $Popup
 
 var views: Array
 var current_view
@@ -24,7 +26,7 @@ func _ready():
 	$VBox/HBox/Config.icon = get_theme_icon("Tools", "EditorIcons")
 	$VBox/HBox2/Unfold.icon = get_theme_icon("AnimationTrackGroup", "EditorIcons")
 	$VBox/HBox2/Collapse.icon = get_theme_icon("AnimationTrackList", "EditorIcons")
-	# tree.set_drag_forwarding(get_drag_data_fw, can_drop_data_fw, drop_data_fw) # TODO drag doesn't work
+	tree.set_drag_forwarding(get_drag_data_fw, can_drop_data_fw, drop_data_fw) # TODO drag doesn't work
 	
 	views = plugin.views
 	current_view = View.new()
@@ -227,15 +229,15 @@ func _on_Locate_pressed():
 	pass
 
 
-func _on_Tree_item_rmb_selected(position, button):
+func _on_Tree_item_rmb_selected(pos, button):
 	if button == MOUSE_BUTTON_RIGHT:
 		var paths = get_selected_paths()
-		$Popup.fill(paths)
-		$Popup.position = tree.get_screen_position() + position
-		$Popup.reset_size()
-		$Popup.popup()
+		popup.fill(paths)
+		popup.position = tree.get_screen_position() + pos
+		popup.reset_size()
+		popup.popup()
 
-func _on_Tree_multi_selected(item, column, selected):
+func _on_Tree_multi_selected(_item, _column, _selected):
 	if _deferred:
 		return
 	_deferred = true
@@ -266,21 +268,51 @@ func _on_HideEmpty_toggled(button_pressed):
 		refresh_tree()
 
 
-func get_drag_data_fw(position):
+func get_drag_data_fw(_pos):
 	var paths = get_selected_paths()
 	plugin.fsd_select_paths(paths)
-	# TODO FileSystemDock::get_drag_data_fw cannot use now
+
+	if paths.is_empty():
+		return null
+
+	# Cannot access FileSystemDock::get_drag_data_fw after 4.0, so implement it
+	
+	# var has_file = false;
+	var has_folder = false;
+
+	for path in paths:
+		if path.ends_with("/"):
+			has_folder = true
+		# else:
+		# 	has_file = true
+
+
+	var drag_data = {
+		type = "files_and_dirs" if has_folder else "files",
+		files = paths,
+		from = plugin.tree
+	}
+
+
+	return drag_data
+	# TODO preview
+
+
+
+
+	# return get_viewport().gui_get_drag_data()
 	# return plugin.filesystem_dock.get_drag_data_fw(get_global_mouse_position(), plugin.tree)
 
 
 
-func can_drop_data_fw(position, data):
+func can_drop_data_fw(pos, data):
 	var type = data["type"] if data.has("type") else null
 	# TODO resource is not supported
 	if not type in ["files", "files_and_dirs"]:
 		return false
-	var target = _get_drag_target_folder(position)
-	if not target:
+	var target = _get_drag_target_folder(pos)
+	# if not target: # ?
+	if typeof(target) == TYPE_NIL:
 		return false
 	
 	if type == "files_and_dirs":
@@ -291,15 +323,20 @@ func can_drop_data_fw(position, data):
 	return true
 
 
-func drop_data_fw(position, data):
-	var target = _get_drag_target_folder(position)
-	var type = data["type"] if data.has("type") else null
+func drop_data_fw(pos, data):
+	var target = _get_drag_target_folder(pos)
+	# var type = data["type"] if data.has("type") else null
 	
 	plugin.fsd_select_paths(data["files"])
-	plugin.filesystem_dock.call("_tree_rmb_option", $Popup.Menu.FILE_MOVE)
-	if plugin.filesystem_move_dialog.visible:
-		plugin.filesystem_move_dialog.hide()
-		plugin.filesystem_move_dialog.emit_signal("dir_selected", target)
+	popup._rmb_option.call_deferred(FsvPopup.Menu.FILE_MOVE)
+	await plugin.filesystem_move_dialog.about_to_popup
+	plugin.filesystem_move_dialog.hide.call_deferred()
+	plugin.filesystem_move_dialog.emit_signal("dir_selected", target)
+	
+	# plugin.filesystem_dock.call("_tree_rmb_option", $Popup.Menu.FILE_MOVE)
+	# if plugin.filesystem_move_dialog.visible:
+	# 	plugin.filesystem_move_dialog.hide()
+	# 	plugin.filesystem_move_dialog.emit_signal("dir_selected", target)
 
 
 func _get_drag_target_folder(pos: Vector2):

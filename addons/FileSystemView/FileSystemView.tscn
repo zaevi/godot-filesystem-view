@@ -34,15 +34,18 @@ expand_icon = true
 
 [node name="Config" type="Button" parent="VBox/HBox"]
 layout_mode = 2
+tooltip_text = "Config Views"
 
 [node name="HBox2" type="HBoxContainer" parent="VBox"]
 layout_mode = 2
 
 [node name="Collapse" type="Button" parent="VBox/HBox2"]
 layout_mode = 2
+tooltip_text = "Collapse All"
 
 [node name="Unfold" type="Button" parent="VBox/HBox2"]
 layout_mode = 2
+tooltip_text = "Unfold All"
 
 [node name="VSeparator" type="VSeparator" parent="VBox/HBox2"]
 visible = false
@@ -61,16 +64,19 @@ size_flags_horizontal = 3
 layout_mode = 2
 toggle_mode = true
 icon = ExtResource("3")
+tooltip_text = "Apply Include"
 
 [node name="ApplyExclude" type="Button" parent="VBox/HBox2"]
 layout_mode = 2
 toggle_mode = true
 icon = ExtResource("4")
+tooltip_text = "Apply Exclude"
 
 [node name="HideEmpty" type="Button" parent="VBox/HBox2"]
 layout_mode = 2
 toggle_mode = true
 icon = ExtResource("2")
+tooltip_text = "Hide Empty Folder"
 
 [node name="Tree" type="Tree" parent="VBox"]
 layout_mode = 2

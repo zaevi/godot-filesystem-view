@@ -23,7 +23,8 @@ func _split_patterns(pattern: String):
 	var patterns = []
 	if pattern == "":
 		return patterns
-	for p in pattern.split(";", false):
+	for p in pattern.replace(",", ";").split(";", false):
+		p = p.strip_edges()
 		if not p.begins_with("res://"):
 			p = "res://" + p
 		patterns.append(p)

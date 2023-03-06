@@ -3,9 +3,20 @@
 [ext_resource type="Script" path="res://addons/FileSystemView/ViewEditor.gd" id="1"]
 
 [node name="ViewEditor" type="AcceptDialog"]
+title = "View Config"
+size = Vector2i(500, 394)
 script = ExtResource("1")
 
 [node name="HBox" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -49.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="HBox" type="HBoxContainer" parent="HBox"]
 layout_mode = 2
@@ -30,6 +41,7 @@ columns = 2
 [node name="Label" type="Label" parent="HBox/Grid"]
 layout_mode = 2
 text = "Name:"
+horizontal_alignment = 2
 
 [node name="Name" type="LineEdit" parent="HBox/Grid"]
 layout_mode = 2
@@ -38,6 +50,7 @@ size_flags_horizontal = 3
 [node name="Label2" type="Label" parent="HBox/Grid"]
 layout_mode = 2
 text = "Icon:"
+horizontal_alignment = 2
 
 [node name="Icon" type="LineEdit" parent="HBox/Grid"]
 layout_mode = 2
@@ -48,7 +61,9 @@ size_flags_vertical = 0
 text = "Include:"
 
 [node name="Include" type="TextEdit" parent="HBox/Grid"]
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="ApplyExclude" type="CheckBox" parent="HBox/Grid"]
 layout_mode = 2
@@ -56,7 +71,9 @@ size_flags_vertical = 0
 text = "Exclude:"
 
 [node name="Exclude" type="TextEdit" parent="HBox/Grid"]
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="HideFolder" type="CheckBox" parent="HBox"]
 layout_mode = 2

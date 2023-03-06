@@ -104,7 +104,6 @@ func _clean_empty_dir(current: TreeItem):
 				should_clean = false
 		else:
 			return false
-		# item = item.get_next()
 		
 	return should_clean
 
@@ -171,6 +170,8 @@ func _on_MenuButton_item_selected(id):
 
 func _on_Tree_item_activated():
 	var item = tree.get_selected()
+	if not item:
+		return
 	var path: String = item.get_metadata(0)
 	if path.ends_with("/"):
 		item.collapsed = not item.collapsed
@@ -271,21 +272,18 @@ func _on_HideEmpty_toggled(button_pressed):
 func get_drag_data_fw(_pos):
 	var paths = get_selected_paths()
 	plugin.fsd_select_paths(paths)
-
 	if paths.is_empty():
 		return null
 
 	# Cannot access FileSystemDock::get_drag_data_fw after 4.0, so implement it
-	
-	# var has_file = false;
-	var has_folder = false;
+	# return plugin.filesystem_dock.get_drag_data_fw(get_global_mouse_position(), plugin.tree)
+
+	var has_folder = false
 
 	for path in paths:
 		if path.ends_with("/"):
 			has_folder = true
-		# else:
-		# 	has_file = true
-
+			break
 
 	var drag_data = {
 		type = "files_and_dirs" if has_folder else "files",
@@ -293,16 +291,41 @@ func get_drag_data_fw(_pos):
 		from = plugin.tree
 	}
 
+	var preview = _create_drag_preview(paths)
+	self.set_drag_preview(preview)
 
 	return drag_data
-	# TODO preview
 
 
+func _create_drag_preview(paths):
+	var vbox = VBoxContainer.new()
+	var count = len(paths)
+	var num_rows = 5 if count > 6 else count
+	for i in range(num_rows):
+		var path = paths[i] as String
+		var hbox = HBoxContainer.new()
+		var icon = TextureRect.new()
+		var label = Label.new()
 
+		if path.ends_with("/"):
+			label.text = path.substr(0, path.length() - 1).get_file()
+			icon.texture = get_theme_icon("Folder", "EditorIcons")
+		else:
+			label.text = path.get_file()
+			icon.texture = get_theme_icon("File", "EditorIcons")
+		
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_CENTERED
+		icon.size = Vector2(16, 16)
+		hbox.add_child(icon)
+		hbox.add_child(label)
+		vbox.add_child(hbox)
 
-	# return get_viewport().gui_get_drag_data()
-	# return plugin.filesystem_dock.get_drag_data_fw(get_global_mouse_position(), plugin.tree)
+	if count > num_rows:
+		var label = Label.new()
+		label.text = "...and " + str(count - num_rows) + " more"
+		vbox.add_child(label)
 
+	return vbox
 
 
 func can_drop_data_fw(pos, data):
@@ -332,11 +355,6 @@ func drop_data_fw(pos, data):
 	await plugin.filesystem_move_dialog.about_to_popup
 	plugin.filesystem_move_dialog.hide.call_deferred()
 	plugin.filesystem_move_dialog.emit_signal("dir_selected", target)
-	
-	# plugin.filesystem_dock.call("_tree_rmb_option", $Popup.Menu.FILE_MOVE)
-	# if plugin.filesystem_move_dialog.visible:
-	# 	plugin.filesystem_move_dialog.hide()
-	# 	plugin.filesystem_move_dialog.emit_signal("dir_selected", target)
 
 
 func _get_drag_target_folder(pos: Vector2):
@@ -372,7 +390,6 @@ func _cache_collapsed_list(parent: TreeItem, list: Array):
 			_cache_collapsed_list(item, list)
 			if item.collapsed:
 				list.append(path)
-		# item = item.get_next()
 
 
 func get_selected_paths():
@@ -383,5 +400,3 @@ func get_selected_paths():
 		item = tree.get_next_selected(item)
 	
 	return paths
-	
-

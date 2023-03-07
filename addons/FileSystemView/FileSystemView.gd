@@ -85,6 +85,8 @@ func refresh_tree():
 func _notification(what):
 	if what == NOTIFICATION_DRAG_BEGIN:
 		var dd = get_viewport().gui_get_drag_data()
+		if typeof(dd) != TYPE_DICTIONARY:
+			return
 		if dd.has("type") and dd["type"] in ["files", "files_and_dirs", "resource"]:
 			tree.drop_mode_flags = Tree.DROP_MODE_INBETWEEN | Tree.DROP_MODE_ON_ITEM
 	elif what == NOTIFICATION_DRAG_END:

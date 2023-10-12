@@ -2,7 +2,6 @@
 extends PopupMenu
 
 var filesystem : EditorFileSystem
-var editor_interface : EditorInterface
 var plugin : EditorPlugin
 
 var _tree_rmb_option : Callable
@@ -45,7 +44,6 @@ func _ready():
 	plugin = get_parent().plugin
 	if not plugin:
 		return
-	editor_interface = plugin.interface
 	filesystem = plugin.filesystem
 	
 	# get callable `FileSystemDock::_tree_rmb_option`
@@ -92,17 +90,7 @@ func fill(paths: PackedStringArray):
 		_add_item(Menu.FILE_OWNERS, "View Owners...")
 	
 	_fix_separator()
-	# TODO waiting for editor's shortcuts (#58585)
-	_add_item(Menu.FSV_COPY_PATHS, "Copy Path", "ActionCopy")
-	if paths[0] != "res://":
-		if paths.size() == 1:
-			_add_item(Menu.FILE_RENAME, "Rename...", "Rename")
-			_add_item(Menu.FILE_DUPLICATE, "Duplicate...", "Duplicate")
-		_add_item(Menu.FILE_MOVE, "Move To...", "MoveUp")
-		_add_item(Menu.FILE_REMOVE, "Remove", "Remove")
-	
 	if paths.size() == 1:
-		_fix_separator()
 		if not new_menu:
 			new_menu = PopupMenu.new()
 			new_menu.name = "New"
@@ -114,7 +102,21 @@ func fill(paths: PackedStringArray):
 			_add_item(Menu.FILE_NEW_TEXTFILE, "TextFile...", "TextFile", new_menu)
 			add_child(new_menu)
 		add_submenu_item("New", "New")
-		add_separator()
+	_fix_separator()
+	# TODO folder OPEN/EXPAND/COLLAPSE
+	# TODO folder color
+	# TODO waiting for editor's shortcuts (#58585)
+	_add_item(Menu.FSV_COPY_PATHS, "Copy Path", "ActionCopy")
+	if paths[0] != "res://":
+		if paths.size() == 1:
+			# TODO re-implement
+			# _add_item(Menu.FILE_RENAME, "Rename...", "Rename")
+			_add_item(Menu.FILE_DUPLICATE, "Duplicate...", "Duplicate")
+		_add_item(Menu.FILE_MOVE, "Move/Duplicate To...", "MoveUp")
+		_add_item(Menu.FILE_REMOVE, "Remove", "Remove")
+	
+	if paths.size() == 1:
+		_fix_separator()
 		_add_item(Menu.FILE_SHOW_IN_EXPLORER, "Show in File Manager", "Filesystem")
 		if all_files:
 			_add_item(Menu.FILE_OPEN_EXTERNAL, "Open in External Program", "ExternalLink")
@@ -150,4 +152,4 @@ func _rmb_option(id):
 			DisplayServer.clipboard_set(file_paths.trim_suffix("\n"))
 		Menu.FSV_PLAY_SCENE:
 			var path = paths[0]
-			editor_interface.play_custom_scene(path)
+			EditorInterface.play_custom_scene(path)

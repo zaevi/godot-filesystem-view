@@ -52,7 +52,7 @@ func _ready():
 	# get callable `FileSystemDock::_tree_rmb_option`
 	for connection in plugin.filesystem_popup.get_signal_connection_list("id_pressed"):
 		var callable : Callable = connection.callable
-		if str(callable) == "FileSystemDock::_tree_rmb_option":
+		if str(callable) == "FileSystemDock::_file_list_rmb_option":
 			_tree_rmb_option = callable
 			break
 	assert(_tree_rmb_option, "can't find callable `_tree_rmb_option`")
